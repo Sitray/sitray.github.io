@@ -1,5 +1,5 @@
 {
-  "name": "absent-accretion",
+  "name": "eric-mares-portfolio",
   "type": "module",
   "version": "0.0.1",
   "engines": {
@@ -10,28 +10,13 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "test": "vitest"
+    "test": "vitest",
+    "test:build": "npm run build && node --test tests/build.test.mjs"
   },
   "dependencies": {
-    "@astrojs/react": "^5.0.4",
-    "@react-three/drei": "^10.7.7",
-    "@react-three/fiber": "^9.6.0",
-    "@react-three/postprocessing": "^3.0.4",
-    "@tailwindcss/vite": "^4.2.4",
-    "@types/react-dom": "^19.2.3",
-    "@types/three": "^0.184.0",
-    "astro": "^6.1.9",
-    "react": "^19.2.5",
-    "react-dom": "^19.2.5",
-    "tailwindcss": "^4.2.4",
-    "three": "^0.184.0"
+    "astro": "^7.3.5"
   },
   "devDependencies": {
-    "@testing-library/dom": "^10.4.1",
-    "@testing-library/react": "^16.3.2",
-    "@types/react": "^19.2.14",
-    "@vitest/coverage-v8": "^4.1.5",
-    "jsdom": "^29.0.2",
     "vitest": "^4.1.5"
   }
 }
