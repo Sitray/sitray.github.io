@@ -59,3 +59,8 @@ Explorer audit done; same branch feat/critique-2. User confirmed the "2 hours" s
 - [x] T17 — README refresh (test coverage, features, PRODUCT.md); fix the astro.config.mjs compressHTML comment.
 - Route: delegated direct, one writer.
 - Evidence: delegated writer, RED observed (vitest 3 failed: per task missing, em dash present, bullet order; build failed on new title format, 404 title, em dash ban, mailto arrow). GREEN: npm test -- --run 16/16; npm run test:build 13/13 (parent re-ran both); git diff --check clean; rg '—' over src/README/tests: none. Browser: 404 shows CV button, email, footer, hero-meta; /es/ title with "·", dates "jul. de 2024 – Actualidad", "Tecnologías", language links carry lang + sr-only names. Decision: all .job-description use --text-soft.
+
+## Header and hero spacing (2026-10-12)
+User: header looked off against the page; hero spacing felt odd. Measured: header backdrop only 1120px wide on a 1440px viewport (content visible unblurred at the sides); hero filled the left ~600px, ended at 591/900px, uneven gaps (17/10/18/26px). User chose a single-column, full-first-viewport hero.
+- [x] T18 — Full-bleed header backdrop and hairline (pseudo-element, body overflow-x: clip), 72px desktop; one-row 56px mobile header (wordmark, CV, EN/ES; section links hidden on phones). Hero on desktop: min-height min(100svh - header - 64px, 820px), content anchored bottom, rhythm 20/8/32/36px; phones keep natural height. Print resets hero layout.
+  - Route: direct inline (single CSS file). Checks: npm test -- --run 16/16; npm run test:build 13/13; git diff --check clean. Browser: 1440x900 bar spans viewport, no overflow, Experience hairline peeks at the fold; 1024x768 ok; 390 and 320 /es/ one-row 56px header, 44px links, no overflow.
