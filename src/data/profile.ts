@@ -54,12 +54,12 @@ export const experience = [
 ];
 
 export const toolkit = [
+  { name: "AI & content", items: "OpenAI API, Contentful" },
   { name: "Frontend", items: "React, Next.js, TypeScript, Tailwind CSS, Sass" },
   {
     name: "Backend & data",
     items: "Node.js, Fastify, Express, GraphQL, PostgreSQL, MySQL, TypeORM",
   },
-  { name: "AI & content", items: "OpenAI API, Contentful" },
   {
     name: "Infrastructure",
     items: "Docker, Kubernetes, Ansible, GitHub Actions, Azure IoT Edge",
@@ -68,4 +68,16 @@ export const toolkit = [
 
 export function assetPath(base: string, filename: string) {
   return `${base.replace(/\/$/, "")}/${filename}`;
+}
+
+/** Whole years elapsed since the earliest `start` month ("YYYY-MM"), in UTC. */
+export function yearsOfExperience(
+  jobs: ReadonlyArray<{ start: string }>,
+  now: Date = new Date(),
+) {
+  const earliest = jobs.map((job) => job.start).sort()[0];
+  const [year, month] = earliest.split("-").map(Number);
+  const elapsedMonths =
+    (now.getUTCFullYear() - year) * 12 + (now.getUTCMonth() + 1 - month);
+  return Math.max(0, Math.floor(elapsedMonths / 12));
 }

@@ -38,6 +38,7 @@ Confirmed hero title (2026-10-11): "Software Engineer · Full Stack & Applied AI
 
 - Name: Eric Marès; wordmark "em." in use.
 - Voice: plain, specific, factual; concrete accomplishments over marketing language.
+- No personal photos anywhere (site, og:image, 404). User decision, 2026-10-11. Any social preview image must be typographic, built from the site's own wordmark, name and role.
 
 ## Evidence on Hand
 

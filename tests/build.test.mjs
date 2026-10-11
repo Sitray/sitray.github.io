@@ -77,7 +77,7 @@ test("CV links download the supplied PDF and contact links preserve destinations
     const downloads = [
       ...html.matchAll(/<a\b[^>]*href="([^"]+\.pdf)"[^>]*download[^>]*>/g),
     ];
-    assert.equal(downloads.length, 2, `${locale} has two CV download links`);
+    assert.equal(downloads.length, 3, `${locale} has three CV download links`);
     for (const [, href] of downloads) {
       assert.equal(basename(href), "eric-mares-cv.pdf");
       const path = resolve("dist", basename(href));
@@ -171,4 +171,26 @@ test("publishes a static, noindexed 404 page linking both locales", () => {
   assert.match(notFound, /href="\/"/);
   assert.match(notFound, /href="\/es\/"/);
   assert.doesNotMatch(notFound, /<script\b/);
+});
+
+test("hero shows a derived seniority line instead of a tracked-caps eyebrow", () => {
+  assert.match(english, /Córdoba, Spain · 4\+ years of experience/);
+  assert.match(spanish, /Córdoba, España · Más de 4 años de experiencia/);
+  for (const { locale, html } of pages) {
+    assert.doesNotMatch(html, /class="eyebrow"/, `${locale} still has an eyebrow`);
+    assert.match(html, /<strong class="proof">/, `${locale} has no proof emphasis`);
+  }
+  assert.match(english, /<strong class="proof">OpenAI API<\/strong>/);
+  assert.match(spanish, /<strong class="proof">API de OpenAI<\/strong>/);
+});
+
+test("contact section closes with a CV download", () => {
+  for (const { locale, html } of pages) {
+    const contact = html.slice(html.indexOf('id="contact"'));
+    assert.match(
+      contact,
+      /<a\b[^>]*class="button"[^>]*href="[^"]+\.pdf"[^>]*download/,
+      `${locale} contact section is missing the CV button`,
+    );
+  }
 });

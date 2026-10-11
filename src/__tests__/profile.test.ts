@@ -1,6 +1,16 @@
 import { describe, expect, it } from "vitest";
-import { assetPath, experience, profile } from "../data/profile";
-import { formatMonth, siteContent } from "../data/site-content";
+import {
+  assetPath,
+  experience,
+  profile,
+  toolkit,
+  yearsOfExperience,
+} from "../data/profile";
+import {
+  formatMonth,
+  siteContent,
+  splitHighlights,
+} from "../data/site-content";
 
 describe("recruiter profile", () => {
   it("preserves the supplied identity and direct contact details", () => {
@@ -65,5 +75,47 @@ describe("recruiter profile", () => {
     }
     expect(formatMonth(experience[0].start, "en")).toBe("Jul 2024");
     expect(formatMonth(experience[0].start, "es")).toBe("jul. de 2024");
+  });
+
+  it.each([
+    ["2026-10-11", 4],
+    ["2025-10-01", 3],
+  ])("derives whole years of experience from the earliest CV start on %s", (date, years) => {
+    expect(yearsOfExperience(experience, new Date(`${date}T12:00:00Z`))).toBe(years);
+  });
+
+  it("does not count a year before its start month is reached", () => {
+    expect(yearsOfExperience(experience, new Date("2026-01-15T12:00:00Z"))).toBe(3);
+    expect(yearsOfExperience(experience, new Date("2026-02-15T12:00:00Z"))).toBe(4);
+  });
+
+  it("leads the toolkit with the AI group and keeps localized labels aligned", () => {
+    expect(toolkit[0].name).toBe("AI & content");
+    expect(siteContent.en.toolkitLabels[0]).toBe("AI & content");
+    expect(siteContent.es.toolkitLabels).toEqual([
+      "IA y contenido",
+      "Frontend",
+      "Backend y datos",
+      "Infraestructura",
+    ]);
+  });
+
+  it("highlights only proof phrases that appear in each hero summary", () => {
+    for (const content of Object.values(siteContent)) {
+      expect(content.heroHighlights.length).toBeGreaterThan(0);
+      for (const phrase of content.heroHighlights)
+        expect(content.heroSummary).toContain(phrase);
+    }
+  });
+
+  it("splits a summary into ordered plain and highlighted segments", () => {
+    expect(splitHighlights("Use the OpenAI API (v1).", ["OpenAI API", "(v1)"])).toEqual([
+      { text: "Use the ", highlight: false },
+      { text: "OpenAI API", highlight: true },
+      { text: " ", highlight: false },
+      { text: "(v1)", highlight: true },
+      { text: ".", highlight: false },
+    ]);
+    expect(splitHighlights("plain", [])).toEqual([{ text: "plain", highlight: false }]);
   });
 });

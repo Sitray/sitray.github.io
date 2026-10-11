@@ -31,6 +31,9 @@ type SiteContent = {
     documentLanguage: string;
   };
   heroSummary: string;
+  /** Exact substrings of heroSummary rendered as emphasized proof. */
+  heroHighlights: string[];
+  experienceYears: (years: number) => string;
   contactCta: string;
   present: string;
   remote: string;
@@ -76,6 +79,8 @@ export const siteContent: Record<Locale, SiteContent> = {
     },
     heroSummary:
       "I build AI-powered product features that ship to production. At The Knot Worldwide, I built personalized baby-name matching with the OpenAI API for The Bump, a platform serving millions of monthly active users, on a full-stack foundation of TypeScript, React, Next.js, and Node.js.",
+    heroHighlights: ["OpenAI API", "millions of monthly active users"],
+    experienceYears: (years) => `${years}+ years of experience`,
     contactCta: "Contact me",
     present: "Present",
     remote: "Fully remote",
@@ -138,6 +143,8 @@ export const siteContent: Record<Locale, SiteContent> = {
     },
     heroSummary:
       "Construyo funcionalidades de producto con IA que llegan a producción. En The Knot Worldwide creé la búsqueda personalizada de nombres de bebé con la API de OpenAI para The Bump, una plataforma con millones de usuarios activos mensuales, sobre una base full stack de TypeScript, React, Next.js y Node.js.",
+    heroHighlights: ["API de OpenAI", "millones de usuarios activos mensuales"],
+    experienceYears: (years) => `Más de ${years} años de experiencia`,
     contactCta: "Contactar",
     present: "Actualidad",
     remote: "Totalmente remoto",
@@ -180,7 +187,7 @@ export const siteContent: Record<Locale, SiteContent> = {
         ],
       },
     ],
-    toolkitLabels: ["Frontend", "Backend y datos", "IA y contenido", "Infraestructura"],
+    toolkitLabels: ["IA y contenido", "Frontend", "Backend y datos", "Infraestructura"],
     education: {
       qualification: "Desarrollo de Aplicaciones Multiplataforma",
       additionalLearning: "Formación adicional: React Native — The Practical Guide",
@@ -230,4 +237,25 @@ export function formatMonth(isoDate: string, locale: Locale) {
   return locale === "es"
     ? `${monthNames.es[monthIndex]} de ${year}`
     : `${monthNames.en[monthIndex]} ${year}`;
+}
+
+/** Splits text into plain and highlighted segments, in order. */
+export function splitHighlights(text: string, phrases: readonly string[]) {
+  const segments: Array<{ text: string; highlight: boolean }> = [];
+  const pattern = phrases
+    .filter(Boolean)
+    .map((phrase) => phrase.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))
+    .join("|");
+  if (!pattern) return [{ text, highlight: false }];
+  let cursor = 0;
+  for (const match of text.matchAll(new RegExp(pattern, "g"))) {
+    const index = match.index ?? 0;
+    if (index > cursor)
+      segments.push({ text: text.slice(cursor, index), highlight: false });
+    segments.push({ text: match[0], highlight: true });
+    cursor = index + match[0].length;
+  }
+  if (cursor < text.length)
+    segments.push({ text: text.slice(cursor), highlight: false });
+  return segments;
 }
