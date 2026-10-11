@@ -45,6 +45,16 @@ describe("recruiter profile", () => {
     expect(assetPath(base, profile.cvFilename)).toBe(expected);
   });
 
+  it("leads with shipped Applied AI evidence in every locale", () => {
+    expect(experience[0].accomplishments[0]).toContain("OpenAI API");
+    for (const content of Object.values(siteContent)) {
+      expect(content.jobs[0].accomplishments[0]).toMatch(/OpenAI/);
+      expect(content.heroSummary).toMatch(/OpenAI/);
+      expect(content.heroSummary).toMatch(/The Bump/);
+    }
+    expect(siteContent.es.heroSummary).not.toMatch(/con IA con/);
+  });
+
   it("keeps each locale aligned with the shared factual career record", () => {
     for (const content of Object.values(siteContent)) {
       expect(content.jobs).toHaveLength(experience.length);

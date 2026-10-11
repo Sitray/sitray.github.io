@@ -26,12 +26,13 @@ npm run preview
 - `src/data/profile.ts`: factual profile, employment accomplishments, and tools.
 - `src/data/site-content.ts`: typed English and Spanish content that reuses shared factual profile records.
 - `src/pages/[...locale].astro`: semantic static template for `/` and `/es/`, metadata, language navigation, and contact links.
+- `src/pages/404.astro`: static, noindexed not-found page with links to both locales.
 - `src/styles/global.css`: responsive editorial design, focus states, reduced motion, and print styles.
 - `public/eric-mares-cv.pdf`: supplied CV, copied without modification.
 - `src/__tests__/profile.test.ts`: profile and deployment-base regression tests.
 - `tests/build.test.mjs`: generated-site smoke tests.
 
-Astro 7 renders the complete page as static HTML. No React, WebGL, client-side JavaScript, network fonts, analytics, or contact service is needed. Contact links open the visitor’s email application or the relevant public profile.
+Astro 7 renders the complete page as static HTML. No React, WebGL, client-side JavaScript, third-party font CDN, analytics, or contact service is needed. The Geist variable font is self-hosted from `@fontsource-variable/geist` and bundled into `dist/_astro/`. Contact links open the visitor’s email application or the relevant public profile.
 
 ## Deployment
 

@@ -27,10 +27,10 @@ test("build contains complete semantic content without client-side JavaScript", 
 });
 
 test("both localized pages publish complete, bidirectional language navigation", () => {
-  assert.match(english, /<title>Eric Marès — Software Engineer<\/title>/);
+  assert.match(english, /<title>Eric Marès — Software Engineer · Full Stack &amp; Applied AI<\/title>/);
   assert.match(
     spanish,
-    /<title>Eric Marès — Ingeniero de software<\/title>/,
+    /<title>Eric Marès — Ingeniero de software · Full Stack e IA aplicada<\/title>/,
   );
   assert.match(
     english,
@@ -129,4 +129,46 @@ test("publishes root-relative assets for the configured GitHub user site", () =>
     }
   }
   assert.equal(existsSync("dist/CNAME"), false);
+});
+
+test("canonical and hreflang alternates are absolute URLs on the configured site", () => {
+  const expected = [
+    { html: english, canonical: "https://sitray.github.io/", ogLocale: "en_US" },
+    { html: spanish, canonical: "https://sitray.github.io/es/", ogLocale: "es_ES" },
+  ];
+  for (const { html, canonical, ogLocale } of expected) {
+    assert.match(html, new RegExp(`<link rel="canonical" href="${canonical}"`));
+    assert.match(html, new RegExp(`<meta property="og:url" content="${canonical}"`));
+    assert.match(html, new RegExp(`<meta property="og:locale" content="${ogLocale}"`));
+    assert.match(html, /<meta property="og:locale:alternate"/);
+    assert.match(html, /<meta name="twitter:card" content="summary"/);
+    assert.match(html, /hreflang="en" href="https:\/\/sitray\.github\.io\/"/);
+    assert.match(html, /hreflang="es" href="https:\/\/sitray\.github\.io\/es\/"/);
+    assert.match(
+      html,
+      /hreflang="x-default" href="https:\/\/sitray\.github\.io\/"/,
+    );
+  }
+});
+
+test("top-of-page links target a real anchor instead of an empty fragment", () => {
+  for (const { locale, html } of pages) {
+    assert.doesNotMatch(html, /href="#"/, `${locale} still has href="#"`);
+    assert.match(html, /\bid="top"/, `${locale} is missing id="top"`);
+    assert.ok(
+      (html.match(/href="#top"/g) || []).length >= 2,
+      `${locale} wordmark and footer must link to #top`,
+    );
+  }
+});
+
+test("publishes a static, noindexed 404 page linking both locales", () => {
+  assert.ok(existsSync("dist/404.html"), "dist/404.html must exist");
+  const notFound = readPage("dist/404.html");
+  assert.match(notFound, /<html lang="en">/);
+  assert.equal((notFound.match(/<h1\b/g) || []).length, 1);
+  assert.match(notFound, /<meta name="robots" content="noindex/);
+  assert.match(notFound, /href="\/"/);
+  assert.match(notFound, /href="\/es\/"/);
+  assert.doesNotMatch(notFound, /<script\b/);
 });
