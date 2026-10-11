@@ -1,5 +1,6 @@
 ---
 import type { GetStaticPaths } from "astro";
+import "@fontsource-variable/geist";
 import "../styles/global.css";
 import { assetPath, experience, profile, toolkit } from "../data/profile";
 import {
@@ -19,6 +20,11 @@ const content = siteContent[locale];
 const cvUrl = assetPath(import.meta.env.BASE_URL, profile.cvFilename);
 const faviconUrl = assetPath(import.meta.env.BASE_URL, "favicon.svg");
 const localePath = locale === "en" ? "/" : "/es/";
+const absoluteUrl = (path: string) => new URL(path, Astro.site).href;
+const canonicalUrl = absoluteUrl(localePath);
+const ogLocales = { en: "en_US", es: "es_ES" } as const;
+const ogLocale = ogLocales[locale];
+const ogLocaleAlternate = ogLocales[locale === "en" ? "es" : "en"];
 ---
 
 <!doctype html>
@@ -31,18 +37,22 @@ const localePath = locale === "en" ? "/" : "/es/";
     <meta property="og:title" content={content.title} />
     <meta property="og:description" content={content.description} />
     <meta property="og:type" content="website" />
-    <link rel="alternate" hreflang="en" href="/" />
-    <link rel="alternate" hreflang="es" href="/es/" />
-    <link rel="alternate" hreflang="x-default" href="/" />
-    <link rel="canonical" href={localePath} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:locale" content={ogLocale} />
+    <meta property="og:locale:alternate" content={ogLocaleAlternate} />
+    <meta name="twitter:card" content="summary" />
+    <link rel="alternate" hreflang="en" href={absoluteUrl("/")} />
+    <link rel="alternate" hreflang="es" href={absoluteUrl("/es/")} />
+    <link rel="alternate" hreflang="x-default" href={absoluteUrl("/")} />
+    <link rel="canonical" href={canonicalUrl} />
     <link rel="icon" type="image/svg+xml" href={faviconUrl} />
     <title>{content.title}</title>
   </head>
   <body>
     <a class="skip-link" href="#main">{content.skipLink}</a>
-    <div class="shell">
+    <div class="shell" id="top">
       <header class="site-header">
-        <a class="wordmark" href="#" aria-label={content.wordmarkLabel}>
+        <a class="wordmark" href="#top" aria-label={content.wordmarkLabel}>
           em<span>.</span>
         </a>
         <div class="header-navigation">
@@ -188,7 +198,7 @@ const localePath = locale === "en" ? "/" : "/es/";
       </main>
       <footer>
         <span>© {new Date().getFullYear()} {profile.name}</span>
-        <a href="#">
+        <a href="#top">
           {content.footerBackToTop} <span aria-hidden="true">↑</span>
         </a>
       </footer>
