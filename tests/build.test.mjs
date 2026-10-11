@@ -1,82 +1,132 @@
-import { readFileSync, existsSync } from "node:fs";
-import { test } from "node:test";
+import { existsSync, readFileSync } from "node:fs";
 import assert from "node:assert/strict";
 import { basename, resolve } from "node:path";
+import { test } from "node:test";
 import config from "../astro.config.mjs";
 
-const html = readFileSync("dist/index.html", "utf8");
+const readPage = (path) => readFileSync(path, "utf8");
+const english = readPage("dist/index.html");
+const spanish = readPage("dist/es/index.html");
+const pages = [
+  { locale: "en", html: english },
+  { locale: "es", html: spanish },
+];
 
 test("build contains complete semantic content without client-side JavaScript", () => {
-  assert.match(html, /<html lang="en">/);
-  assert.match(html, /<main\b[^>]*id="main"[^>]*tabindex="-1"/);
-  assert.equal((html.match(/<h1\b/g) || []).length, 1);
-  assert.match(html, /Eric Marès/);
-  assert.match(html, /The Knot Worldwide/);
-  assert.match(html, /Wheel Hub/);
-  assert.match(html, /Escola Pia Mataró/);
-  assert.doesNotMatch(html, /<script\b|<astro-island\b|client:only/);
-});
-
-test("all non-empty fragment links resolve to an element", () => {
-  const ids = new Set(
-    [...html.matchAll(/\bid="([^"]+)"/g)].map((match) => match[1]),
-  );
-  const fragments = [...html.matchAll(/href="#([^"]+)"/g)].map(
-    (match) => match[1],
-  );
-  assert.ok(
-    fragments.includes("main"),
-    "skip link must target the main content",
-  );
-  for (const fragment of fragments)
-    assert.ok(ids.has(fragment), `Missing anchor: ${fragment}`);
-});
-
-test("CV links download a real PDF and contact links preserve supplied destinations", () => {
-  const downloads = [
-    ...html.matchAll(/<a\b[^>]*href="([^"]+\.pdf)"[^>]*download[^>]*>/g),
-  ];
-  assert.equal(downloads.length, 2);
-  for (const [, href] of downloads) {
-    assert.equal(basename(href), "eric-mares-cv.pdf");
-    const path = resolve("dist", basename(href));
-    assert.ok(existsSync(path), `Missing PDF: ${href}`);
-    assert.equal(readFileSync(path).subarray(0, 5).toString(), "%PDF-");
+  assert.match(english, /<html lang="en">/);
+  assert.match(spanish, /<html lang="es">/);
+  for (const { html } of pages) {
+    assert.match(html, /<main\b[^>]*id="main"[^>]*tabindex="-1"/);
+    assert.equal((html.match(/<h1\b/g) || []).length, 1);
+    assert.match(html, /Eric Marès/);
+    assert.match(html, /The Knot Worldwide/);
+    assert.match(html, /Wheel Hub/);
+    assert.match(html, /Escola Pia Mataró/);
+    assert.doesNotMatch(html, /<script\b|<astro-island\b|client:only/);
   }
-  assert.match(html, /mailto:ericmares13@gmail\.com/);
-  assert.match(html, /https:\/\/www\.linkedin\.com\/in\/eric-mares-aguilera/);
-  assert.match(html, /https:\/\/github\.com\/Sitray/);
+});
+
+test("both localized pages publish complete, bidirectional language navigation", () => {
+  assert.match(english, /<title>Eric Marès — Software Engineer<\/title>/);
+  assert.match(
+    spanish,
+    /<title>Eric Marès — Ingeniero de software<\/title>/,
+  );
+  assert.match(
+    english,
+    /<a[^>]*href="\/"[^>]*hreflang="en"[^>]*aria-current="page"[^>]*>\s*EN/,
+  );
+  assert.match(
+    english,
+    /<a[^>]*href="\/es\/"[^>]*hreflang="es"[^>]*>\s*ES/,
+  );
+  assert.match(
+    spanish,
+    /<a[^>]*href="\/"[^>]*hreflang="en"[^>]*>\s*EN/,
+  );
+  assert.match(
+    spanish,
+    /<a[^>]*href="\/es\/"[^>]*hreflang="es"[^>]*aria-current="page"[^>]*>\s*ES/,
+  );
+  assert.match(english, /href="\/es\/" hreflang="es"/);
+  assert.match(spanish, /href="\/" hreflang="en"/);
+  assert.match(spanish, /Descargar CV en inglés/);
+  assert.match(spanish, /Experiencia/);
+  assert.match(spanish, /Actualidad/);
+});
+
+test("all non-empty fragment links resolve to an element on every locale", () => {
+  for (const { locale, html } of pages) {
+    const ids = new Set(
+      [...html.matchAll(/\bid="([^"]+)"/g)].map((match) => match[1]),
+    );
+    const fragments = [...html.matchAll(/href="#([^"]+)"/g)].map(
+      (match) => match[1],
+    );
+    assert.ok(
+      fragments.includes("main"),
+      `${locale} skip link must target the main content`,
+    );
+    for (const fragment of fragments)
+      assert.ok(ids.has(fragment), `${locale} is missing anchor: ${fragment}`);
+  }
+});
+
+test("CV links download the supplied PDF and contact links preserve destinations", () => {
+  for (const { locale, html } of pages) {
+    const downloads = [
+      ...html.matchAll(/<a\b[^>]*href="([^"]+\.pdf)"[^>]*download[^>]*>/g),
+    ];
+    assert.equal(downloads.length, 2, `${locale} has two CV download links`);
+    for (const [, href] of downloads) {
+      assert.equal(basename(href), "eric-mares-cv.pdf");
+      const path = resolve("dist", basename(href));
+      assert.ok(existsSync(path), `Missing PDF: ${href}`);
+      assert.equal(readFileSync(path).subarray(0, 5).toString(), "%PDF-");
+    }
+    assert.match(html, /mailto:ericmares13@gmail\.com/);
+    assert.match(html, /https:\/\/www\.linkedin\.com\/in\/eric-mares-aguilera/);
+    assert.match(html, /https:\/\/github\.com\/Sitray/);
+  }
+  assert.deepEqual(
+    readFileSync("dist/eric-mares-cv.pdf"),
+    readFileSync("public/eric-mares-cv.pdf"),
+  );
 });
 
 test("renders a direct CV-led page with the requested public name", () => {
-  const withoutLinks = html.replace(/href="[^"]*"/g, "");
+  const withoutLinks = english.replace(/href="[^"]*"/g, "");
   assert.doesNotMatch(withoutLinks, /Aguilera/i);
-  assert.match(html, /<title>Eric Marès — Software Engineer<\/title>/);
   assert.doesNotMatch(
-    html,
+    english,
     /Human problems|Built for people|The path so far|what’s next|hero-note|id="work"/,
   );
-  assert.match(html, /personalized suggestions/);
+  assert.match(english, /personalized suggestions/);
   assert.match(
-    html,
+    english,
     /2 hours of development and 2 hours of Product validation/,
   );
-  assert.match(html, /ABB Edge Config Tool/);
-  assert.match(html, /Azure IoT Edge pipelines/);
-  assert.match(html, /TypeORM and MySQL/);
-  assert.equal((html.match(/class="accomplishments"/g) || []).length, 3);
+  assert.match(english, /ABB Edge Config Tool/);
+  assert.match(english, /Azure IoT Edge pipelines/);
+  assert.match(english, /TypeORM and MySQL/);
+  assert.equal((english.match(/class="accomplishments"/g) || []).length, 3);
+  assert.equal((spanish.match(/class="accomplishments"/g) || []).length, 3);
 });
-
 
 test("publishes root-relative assets for the configured GitHub user site", () => {
   assert.equal(config.site, "https://sitray.github.io");
   assert.ok(!config.base || config.base === "/");
-  assert.match(html, /href="\/eric-mares-cv\.pdf"/);
-  assert.match(html, /href="\/favicon\.svg"/);
-  const stylesheets = [...html.matchAll(/href="(\/_astro\/[^"?]+\.css)"/g)];
-  assert.ok(stylesheets.length > 0, "built page must link a stylesheet");
-  for (const [, href] of stylesheets) {
-    assert.ok(existsSync(resolve("dist", href.slice(1))), `Missing stylesheet: ${href}`);
+  for (const { html } of pages) {
+    assert.match(html, /href="\/eric-mares-cv\.pdf"/);
+    assert.match(html, /href="\/favicon\.svg"/);
+    const stylesheets = [...html.matchAll(/href="(\/_astro\/[^"?]+\.css)"/g)];
+    assert.ok(stylesheets.length > 0, "built page must link a stylesheet");
+    for (const [, href] of stylesheets) {
+      assert.ok(
+        existsSync(resolve("dist", href.slice(1))),
+        `Missing stylesheet: ${href}`,
+      );
+    }
   }
   assert.equal(existsSync("dist/CNAME"), false);
 });
