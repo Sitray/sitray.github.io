@@ -2,11 +2,18 @@
 import type { GetStaticPaths } from "astro";
 import "@fontsource-variable/geist";
 import "../styles/global.css";
-import { assetPath, experience, profile, toolkit } from "../data/profile";
+import {
+  assetPath,
+  experience,
+  profile,
+  toolkit,
+  yearsOfExperience,
+} from "../data/profile";
 import {
   formatMonth,
   locales,
   siteContent,
+  splitHighlights,
   type Locale,
 } from "../data/site-content";
 
@@ -25,6 +32,10 @@ const canonicalUrl = absoluteUrl(localePath);
 const ogLocales = { en: "en_US", es: "es_ES" } as const;
 const ogLocale = ogLocales[locale];
 const ogLocaleAlternate = ogLocales[locale === "en" ? "es" : "en"];
+const heroMeta = `${content.location} · ${content.experienceYears(
+  yearsOfExperience(experience),
+)}`;
+const heroSummary = splitHighlights(content.heroSummary, content.heroHighlights);
 ---
 
 <!doctype html>
@@ -73,12 +84,11 @@ const ogLocaleAlternate = ogLocales[locale === "en" ? "es" : "en"];
               <a
                 href={language === "en" ? "/" : "/es/"}
                 hreflang={language}
+                lang={language}
                 aria-current={language === locale ? "page" : undefined}
               >
                 {language.toUpperCase()}
-                <span class="sr-only">
-                  {language === locale ? ` (${content.localeName})` : ""}
-                </span>
+                <span class="sr-only"> {siteContent[language].localeName}</span>
               </a>
             ))}
           </nav>
@@ -86,17 +96,25 @@ const ogLocaleAlternate = ogLocales[locale === "en" ? "es" : "en"];
       </header>
       <main id="main" tabindex="-1">
         <section class="hero" aria-labelledby="hero-title">
-          <p class="eyebrow">{content.location}</p>
           <h1 id="hero-title">{profile.name}</h1>
           <p class="hero-role">{content.role}</p>
-          <p class="hero-summary">{content.heroSummary}</p>
+          <p class="hero-meta">{heroMeta}</p>
+          <p class="hero-summary">
+            {heroSummary.map((segment) =>
+              segment.highlight ? (
+                <strong class="proof">{segment.text}</strong>
+              ) : (
+                segment.text
+              ),
+            )}
+          </p>
           <div class="hero-actions">
             <a class="button" href={cvUrl} download>
               {content.cv.download} <span aria-hidden="true">↓</span>
               <span class="sr-only"> ({content.cv.documentLanguage})</span>
             </a>
             <a class="text-link" href={`mailto:${profile.email}`}>
-              {content.contactCta} <span aria-hidden="true">↗</span>
+              {content.contactCta} <span aria-hidden="true">→</span>
             </a>
           </div>
         </section>
@@ -116,7 +134,7 @@ const ogLocaleAlternate = ogLocales[locale === "en" ? "es" : "en"];
                       <time datetime={job.start}>
                         {formatMonth(job.start, locale)}
                       </time>{" "}
-                      —{" "}
+                      –{" "}
                       {job.end ? (
                         <time datetime={job.end}>
                           {formatMonth(job.end, locale)}
@@ -161,7 +179,7 @@ const ogLocaleAlternate = ogLocales[locale === "en" ? "es" : "en"];
             <div class="education">
               <h3>{content.education.qualification}</h3>
               <p>
-                Escola Pia Mataró <span>2015 — 2017</span>
+                Escola Pia Mataró <span>2015 – 2017</span>
               </p>
               <p class="additional-learning">
                 {content.education.additionalLearning}
@@ -185,13 +203,19 @@ const ogLocaleAlternate = ogLocales[locale === "en" ? "es" : "en"];
           <h2 id="contact-title">{content.sections.contact}</h2>
           <div class="contact-links">
             <a class="email" href={`mailto:${profile.email}`}>{profile.email}</a>
-            <div class="social-links">
-              <a href={profile.linkedin}>
-                LinkedIn <span aria-hidden="true">↗</span>
+            <div class="contact-actions">
+              <a class="button" href={cvUrl} download>
+                {content.cv.download} <span aria-hidden="true">↓</span>
+                <span class="sr-only"> ({content.cv.documentLanguage})</span>
               </a>
-              <a href={profile.github}>
-                GitHub <span aria-hidden="true">↗</span>
-              </a>
+              <div class="social-links">
+                <a href={profile.linkedin}>
+                  LinkedIn <span aria-hidden="true">↗</span>
+                </a>
+                <a href={profile.github}>
+                  GitHub <span aria-hidden="true">↗</span>
+                </a>
+              </div>
             </div>
           </div>
         </section>

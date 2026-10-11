@@ -12,28 +12,28 @@ export const experience = [
   {
     company: "The Knot Worldwide",
     role: "Software Engineer",
-    period: "Jul 2024 — Present",
+    period: "Jul 2024 – Present",
     start: "2024-07",
     end: null,
     description:
-      "The Bump — a platform serving millions of monthly active users.",
+      "The Bump, a platform serving millions of monthly active users.",
     accomplishments: [
       "Built AI-powered baby-name matching that compares partners’ preferences, identifies shared matches, and offers personalized suggestions using Next.js, TypeScript, Tailwind CSS, Node.js, and the OpenAI API.",
+      "Automated recurring operational tasks in internal admin tools, enabling editorial self-service and saving approximately 2 hours of development and 2 hours of Product validation per task.",
       "Deliver features end to end across frontend, backend, content, and data, working with Product, Design, Editorial, and Engineering.",
-      "Automated recurring operational tasks in internal admin tools, enabling editorial self-service. Saved approximately 2 hours of development and 2 hours of Product validation.",
       "Develop and maintain services and internal tools with React, Fastify, PostgreSQL, and Contentful in a Docker and Kubernetes environment.",
-      "Contribute to code reviews and technical decisions across the team.",
+      "Take part in the team’s code reviews and technical decisions.",
     ],
   },
   {
     company: "ALTEN",
     role: "Junior Software Engineer",
-    period: "Nov 2022 — Jun 2024",
+    period: "Nov 2022 – Jun 2024",
     start: "2022-11",
     end: "2024-06",
     description: "Client projects for ABB Robotics and PortAventura.",
     accomplishments: [
-      "Delivered modules for ABB’s Optifact Suite for industrial automation and automotive applications, including work on ABB Insights and ABB Edge Config Tool.",
+      "Delivered modules for ABB’s Optifact Suite (industrial automation and automotive applications), including work on ABB Insights and ABB Edge Config Tool.",
       "Built industrial IoT and edge telemetry features with Node.js, React, TypeScript, and GraphQL.",
       "Automated deployment workflows with Docker, Ansible, and GitHub Actions in Azure IoT Edge pipelines.",
       "Developed new React screens for PortAventura.",
@@ -42,7 +42,7 @@ export const experience = [
   {
     company: "Wheel Hub",
     role: "Junior Full Stack Developer",
-    period: "Feb 2022 — Nov 2022",
+    period: "Feb 2022 – Nov 2022",
     start: "2022-02",
     end: "2022-11",
     description: "Hospital project for the Generalitat de Catalunya.",
@@ -54,12 +54,12 @@ export const experience = [
 ];
 
 export const toolkit = [
+  { name: "AI & content", items: "OpenAI API, Contentful" },
   { name: "Frontend", items: "React, Next.js, TypeScript, Tailwind CSS, Sass" },
   {
     name: "Backend & data",
     items: "Node.js, Fastify, Express, GraphQL, PostgreSQL, MySQL, TypeORM",
   },
-  { name: "AI & content", items: "OpenAI API, Contentful" },
   {
     name: "Infrastructure",
     items: "Docker, Kubernetes, Ansible, GitHub Actions, Azure IoT Edge",
@@ -68,4 +68,16 @@ export const toolkit = [
 
 export function assetPath(base: string, filename: string) {
   return `${base.replace(/\/$/, "")}/${filename}`;
+}
+
+/** Whole years elapsed since the earliest `start` month ("YYYY-MM"), in UTC. */
+export function yearsOfExperience(
+  jobs: ReadonlyArray<{ start: string }>,
+  now: Date = new Date(),
+) {
+  const earliest = jobs.map((job) => job.start).sort()[0];
+  const [year, month] = earliest.split("-").map(Number);
+  const elapsedMonths =
+    (now.getUTCFullYear() - year) * 12 + (now.getUTCMonth() + 1 - month);
+  return Math.max(0, Math.floor(elapsedMonths / 12));
 }

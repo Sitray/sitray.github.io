@@ -37,3 +37,25 @@ Apply the redesign-existing-projects audit to the bilingual recruiter site witho
 - impeccable detect over src: 0 findings.
 - Not done: og:image (needs a real 1200x630 asset); print preview and OS reduced-motion emulation not re-run.
 - Committed as one work unit (feat(ui)); untracked tool dirs and .gitignore left out.
+
+## Second critique follow-up (26/32, 2026-10-11)
+Branch feat/critique-2 from origin/main bc6892a. User asked for all five issues ("hazlos todos"). Portfolio style preserved; hero title unchanged; no personal photos; CV-faithful claims only.
+- [x] T7 — Readable AI proof: hero summary 16-17px in a brighter tone, "OpenAI API" and the platform-scale phrase emphasized (--text, 500), real ~70-character measure (em-based, not ch).
+- [x] T8 — Seniority signal: years of experience derived from the earliest CV start date (Feb 2022), shown with location under the role; replaces the tracked-caps eyebrow above the h1 (detector hero-eyebrow-chip).
+- [x] T9 — Skills: AI group moved first (no new tools).
+- [x] T10 — Contact closes with the existing CV button.
+- [x] T11 — Desktop measures: experience text capped near 75 characters; EN/ES links 44px at all widths.
+- Route: delegated direct, one writer (5 files, markup + CSS + data + tests).
+- Evidence: delegated writer, RED observed (vitest 5 failed: yearsOfExperience missing, toolkit order, heroHighlights undefined; build 3 failed: 3 CV links, seniority text, contact CV button). GREEN: npm test -- --run 14/14; npm run test:build 11/11 (parent spot check re-ran both); git diff --check clean. Changed assertion: CV download count 2 -> 3 per locale (intended). Browser: / desktop and /es/ 390px, no overflow, meta "4+ years" from data, proof phrases emphasized, contact CV button present. In-browser impeccable detect: 0 anti-patterns on / and /es/ (was 2 and 3).
+- Follow-up not done: 404 page still uses the eyebrow pattern (out of writer scope); LLM keyword pending CV verification; og:image would be typographic only (no personal photos).
+
+## Repo-wide copy and UX pass (2026-10-11, user: "revisa todo el repo", "mejora los textos", "quita los —")
+Explorer audit done; same branch feat/critique-2. User confirmed the "2 hours" savings are per task.
+- [x] T12 — Remove every em dash from user-facing copy and metadata (titles, descriptions, The Bump lines, date ranges, "React Native: The Practical Guide", 404 title). Date ranges use a spaced en dash or "to"; tests updated to match.
+- [x] T13 — Copy: hero split into shorter sentences (highlights stay exact substrings); job 1 bullets ordered past then present; "2 hours" bullet merged and "per task" added (EN/ES), test ban updated; Optifact "for ... for" fixed; "across the team" tightened; ES: "emparejamiento", "pipelines", "telemetría en el edge", "Tecnologías", "Lengua materna", "una plataforma con millones...".
+- [x] T14 — Language switch: every link carries its own language name (sr-only, in that language) and lang attribute.
+- [x] T15 — 404: h1 first, hero-meta instead of eyebrow, add CV button, email link and footer, skip link and tabindex on main, BASE_URL-aware hrefs, internal arrows "→"; drop .eyebrow CSS; mailto arrows "→" on the main page too.
+- [x] T16 — CSS: --z-grain below header; single .job-description colour; print shows social URLs and disables rise-in; remove dead .accent and --z-base and the duplicated mobile/print rules; action rows min 14px.
+- [x] T17 — README refresh (test coverage, features, PRODUCT.md); fix the astro.config.mjs compressHTML comment.
+- Route: delegated direct, one writer.
+- Evidence: delegated writer, RED observed (vitest 3 failed: per task missing, em dash present, bullet order; build failed on new title format, 404 title, em dash ban, mailto arrow). GREEN: npm test -- --run 16/16; npm run test:build 13/13 (parent re-ran both); git diff --check clean; rg '—' over src/README/tests: none. Browser: 404 shows CV button, email, footer, hero-meta; /es/ title with "·", dates "jul. de 2024 – Actualidad", "Tecnologías", language links carry lang + sr-only names. Decision: all .job-description use --text-soft.

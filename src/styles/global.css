@@ -9,9 +9,8 @@
   --header-height: 90px;
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
   --duration-fast: 200ms;
-  --z-base: 0;
+  --z-grain: 1;
   --z-header: 10;
-  --z-grain: 20;
   --z-skip: 30;
   font-family:
     "Geist Variable", "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -75,9 +74,6 @@ li {
 .shell {
   width: min(1120px, calc(100% - 112px));
   margin: 0 auto;
-}
-.accent {
-  color: var(--accent);
 }
 .sr-only {
   position: absolute;
@@ -153,7 +149,8 @@ nav a span {
   border-left: 1px solid var(--line);
 }
 .language-nav a {
-  min-height: auto;
+  justify-content: center;
+  min-width: 44px;
   color: var(--muted);
   font-size: 13px;
   letter-spacing: 0.08em;
@@ -191,17 +188,10 @@ footer a:hover {
   color: var(--accent);
 }
 .hero {
-  padding: 48px 0 54px;
-}
-.eyebrow {
-  color: var(--muted);
-  font-size: 12px;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 1.6px;
+  padding: 64px 0 54px;
 }
 h1 {
-  margin: 18px 0 17px -4px;
+  margin: 0 0 17px -4px;
   font-size: clamp(52px, 6.8vw, 88px);
   line-height: 1.05;
   font-weight: 500;
@@ -213,18 +203,31 @@ h1 {
   line-height: 1.4;
   letter-spacing: -0.4px;
 }
-.hero-summary {
-  max-width: 64ch;
-  margin-top: 20px;
-  font-size: 15px;
+.hero-meta {
+  margin-top: 10px;
   color: var(--muted);
+  font-size: 14px;
+  line-height: 1.5;
+  font-variant-numeric: tabular-nums;
+}
+.hero-summary {
+  /* ~70 characters per line in Geist; ch would allow ~90. */
+  max-width: 35em;
+  margin-top: 18px;
+  font-size: 17px;
+  color: var(--text-soft);
+}
+.proof {
+  color: var(--text);
+  font-weight: 500;
 }
 .hero-actions {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 30px;
+  gap: 16px 30px;
   margin-top: 26px;
-  font-size: 13px;
+  font-size: 14px;
 }
 .button {
   display: inline-flex;
@@ -310,13 +313,15 @@ h2 {
   color: var(--accent);
   font-weight: 500;
 }
+.job-description,
+.accomplishments {
+  /* ~75 characters per line at the body size. */
+  max-width: 39em;
+}
 .job-description {
   margin-top: 16px;
-  color: var(--muted);
+  color: var(--text-soft);
   font-size: 14px;
-}
-.job:first-child .job-description {
-  color: var(--text);
 }
 .accomplishments {
   padding-left: 18px;
@@ -392,10 +397,18 @@ h2 {
 }
 .contact-links {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
   gap: 24px;
   margin-top: 25px;
+}
+.contact-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px 32px;
+  font-size: 14px;
 }
 .email {
   display: inline-flex;
@@ -471,6 +484,9 @@ footer a > span {
 .hero > :nth-child(5) {
   animation-delay: 280ms;
 }
+.hero > :nth-child(6) {
+  animation-delay: 350ms;
+}
 @media (max-width: 900px) {
   .shell {
     width: calc(100% - 64px);
@@ -499,7 +515,6 @@ footer a > span {
       "wordmark language"
       "primary primary";
     align-items: center;
-    min-height: var(--header-height);
     padding: 6px 0;
   }
   .wordmark {
@@ -531,33 +546,28 @@ footer a > span {
     padding-left: 0;
     border-left: 0;
   }
-  .language-nav a {
-    justify-content: center;
-    min-height: 44px;
-    min-width: 44px;
-  }
   .hero {
-    padding: 33px 0 38px;
-  }
-  .eyebrow {
-    font-size: 12px;
+    padding: 44px 0 38px;
   }
   h1 {
-    margin: 16px 0;
+    margin: 0 0 16px;
     font-size: clamp(45px, 11vw, 66px);
   }
   .hero-role {
     font-size: 17px;
     max-width: 320px;
   }
+  .hero-meta {
+    margin-top: 8px;
+    font-size: 13px;
+  }
   .hero-summary {
-    margin-top: 17px;
-    font-size: 14px;
+    margin-top: 16px;
+    font-size: 16px;
   }
   .hero-actions {
-    gap: 24px;
+    gap: 16px 24px;
     margin-top: 23px;
-    font-size: 12px;
   }
   .button {
     padding: 14px 18px;
@@ -624,17 +634,17 @@ footer a > span {
     display: inline-block;
     font-size: 18px;
   }
-  .social-links {
-    margin-top: 13px;
+  .contact-actions {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 13px;
+    margin-top: 21px;
   }
   .language-nav a {
     font-size: 12px;
   }
   .social-links {
     font-size: 13px;
-  }
-  footer {
-    font-size: 12px;
   }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -656,6 +666,7 @@ footer a > span {
     --muted: #444;
     --accent: #5c4822;
     --line: #ccc;
+    --text-soft: #333;
   }
   .shell {
     width: 100%;
@@ -663,6 +674,7 @@ footer a > span {
   body::before,
   .site-header,
   .hero-actions,
+  .contact-actions .button,
   .skip-link,
   footer {
     display: none;
@@ -692,11 +704,17 @@ footer a > span {
     color: var(--text);
     font-size: 12px;
   }
-  .background-grid {
-    gap: 40px;
-  }
   .education,
   .languages {
     break-inside: avoid;
+  }
+  .hero > * {
+    animation: none;
+  }
+  .social-links span {
+    display: none;
+  }
+  .social-links a::after {
+    content: " (" attr(href) ")";
   }
 }

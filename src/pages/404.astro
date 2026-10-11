@@ -3,8 +3,12 @@ import "@fontsource-variable/geist";
 import "../styles/global.css";
 import { assetPath, profile } from "../data/profile";
 
-const faviconUrl = assetPath(import.meta.env.BASE_URL, "favicon.svg");
-const title = `Page not found — ${profile.name}`;
+const base = import.meta.env.BASE_URL;
+const faviconUrl = assetPath(base, "favicon.svg");
+const cvUrl = assetPath(base, profile.cvFilename);
+const homeUrl = assetPath(base, "");
+const spanishHomeUrl = assetPath(base, "es/");
+const title = `Page not found · ${profile.name}`;
 const heading = "This page does not exist.";
 const summary =
   "The link may be outdated or mistyped. The full profile, experience and CV are on the home page.";
@@ -24,28 +28,44 @@ const spanishSummary =
     <title>{title}</title>
   </head>
   <body>
+    <a class="skip-link" href="#main">Skip to content</a>
     <div class="shell" id="top">
       <header class="site-header">
-        <a class="wordmark" href="/" aria-label={`${profile.name}, home`}>
+        <a class="wordmark" href={homeUrl} aria-label={`${profile.name}, home`}>
           em<span>.</span>
         </a>
       </header>
-      <main id="main" class="not-found">
+      <main id="main" class="not-found" tabindex="-1">
         <section class="hero" aria-labelledby="not-found-title">
-          <p class="eyebrow">Error 404</p>
           <h1 id="not-found-title">{heading}</h1>
+          <p class="hero-meta">Error 404 · Página no encontrada</p>
           <p class="hero-summary">{summary}</p>
           <p class="hero-summary" lang="es">{spanishSummary}</p>
           <div class="hero-actions">
-            <a class="button" href="/">
-              Back to home <span aria-hidden="true">←</span>
+            <a class="button" href={cvUrl} download>
+              Download CV <span aria-hidden="true">↓</span>
+              <span class="sr-only"> (PDF)</span>
             </a>
-            <a class="text-link" href="/es/" hreflang="es" lang="es">
-              Ir a la versión en español <span aria-hidden="true">↗</span>
+            <a class="text-link" href={homeUrl}>
+              Back to home <span aria-hidden="true">→</span>
+            </a>
+          </div>
+          <div class="hero-actions">
+            <a class="text-link" href={spanishHomeUrl} hreflang="es" lang="es">
+              Ir a la versión en español <span aria-hidden="true">→</span>
+            </a>
+            <a class="text-link" href={`mailto:${profile.email}`}>
+              {profile.email} <span aria-hidden="true">→</span>
             </a>
           </div>
         </section>
       </main>
+      <footer>
+        <span>© {new Date().getFullYear()} {profile.name}</span>
+        <a href="#top">
+          Back to top <span aria-hidden="true">↑</span>
+        </a>
+      </footer>
     </div>
   </body>
 </html>
