@@ -75,7 +75,7 @@ export const siteContent: Record<Locale, SiteContent> = {
       documentLanguage: "PDF",
     },
     heroSummary:
-      "I develop web applications and AI-powered features with TypeScript, React, Next.js, and Node.js. Currently at The Knot Worldwide, building frontend and backend features for The Bump.",
+      "I build AI-powered product features that ship to production. At The Knot Worldwide, I built personalized baby-name matching with the OpenAI API for The Bump, a platform serving millions of monthly active users, on a full-stack foundation of TypeScript, React, Next.js, and Node.js.",
     contactCta: "Contact me",
     present: "Present",
     remote: "Fully remote",
@@ -137,7 +137,7 @@ export const siteContent: Record<Locale, SiteContent> = {
       documentLanguage: "PDF en inglés",
     },
     heroSummary:
-      "Desarrollo aplicaciones web y funcionalidades con IA con TypeScript, React, Next.js y Node.js. Actualmente trabajo en The Knot Worldwide, creando funcionalidades de frontend y backend para The Bump.",
+      "Construyo funcionalidades de producto con IA que llegan a producción. En The Knot Worldwide creé la búsqueda personalizada de nombres de bebé con la API de OpenAI para The Bump, una plataforma con millones de usuarios activos mensuales, sobre una base full stack de TypeScript, React, Next.js y Node.js.",
     contactCta: "Contactar",
     present: "Actualidad",
     remote: "Totalmente remoto",
@@ -154,8 +154,8 @@ export const siteContent: Record<Locale, SiteContent> = {
         description:
           "The Bump — una plataforma que presta servicio a millones de usuarios activos mensuales.",
         accomplishments: [
-          "Desarrollo funcionalidades de principio a fin en frontend, backend, contenido y datos, colaborando con Producto, Diseño, Editorial e Ingeniería.",
           "Creé una funcionalidad de búsqueda de nombres de bebé con IA que compara las preferencias de las parejas, identifica coincidencias y ofrece sugerencias personalizadas con Next.js, TypeScript, Tailwind CSS, Node.js y la API de OpenAI.",
+          "Desarrollo funcionalidades de principio a fin en frontend, backend, contenido y datos, colaborando con Producto, Diseño, Editorial e Ingeniería.",
           "Automaticé tareas operativas recurrentes en herramientas internas de administración, permitiendo el autoservicio del equipo editorial. Se ahorraron aproximadamente 2 horas de desarrollo y 2 horas de validación de Producto.",
           "Desarrollo y mantengo servicios y herramientas internas con React, Fastify, PostgreSQL y Contentful en un entorno de Docker y Kubernetes.",
           "Participo en revisiones de código y decisiones técnicas del equipo.",

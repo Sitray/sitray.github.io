@@ -23,6 +23,8 @@ Apply the redesign-existing-projects audit to the bilingual recruiter site witho
 - [x] T2 — Interaction and navigation: sticky translucent header, press states, real top anchor instead of href="#".
 - [x] T3 — Metadata and 404: absolute canonical/hreflang/og:url from Astro.site, twitter card, branded bilingual-aware 404 page.
 - [x] T4 — Surface and motion: subtle grain overlay and CSS-only staggered hero entry, disabled under reduced motion.
+- [x] T5 — Critique follow-up (clarify + distill + polish, 2026-10-11): hero summary leads with shipped OpenAI API baby-name matching and The Bump scale (EN/ES), AI bullet moved first in The Knot Worldwide (EN/ES), Spanish double "con" removed, hero summary measure capped at 64ch. Hero title unchanged per user decision; portfolio style preserved. Bullet merge skipped: unit test fixes CV bullet counts [5,4,2] and forbids "millions" in bullets.
+  - Route: direct inline (mechanical copy edits, already understood). RED: new unit test failed ("expected 'Deliver features end to end…' to contain 'OpenAI API'"). GREEN: npm test -- --run 8/8; npm run test:build 9/9; git diff --check clean. Browser: / desktop and /es/ 390px, no overflow, first bullet is the AI feature.
 - Route: delegated direct, one writer (2+ non-trivial files; reading prepares the write).
 - Test-first: build tests for absolute canonical/hreflang, top anchor, and dist/404.html get RED before implementation. CSS-only visual changes verified in browser.
 - Checks: npm test -- --run; npm run test:build; git diff --check; browser at desktop, 390px, 320px.

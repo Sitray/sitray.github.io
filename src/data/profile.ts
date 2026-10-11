@@ -18,8 +18,8 @@ export const experience = [
     description:
       "The Bump — a platform serving millions of monthly active users.",
     accomplishments: [
-      "Deliver features end to end across frontend, backend, content, and data, working with Product, Design, Editorial, and Engineering.",
       "Built AI-powered baby-name matching that compares partners’ preferences, identifies shared matches, and offers personalized suggestions using Next.js, TypeScript, Tailwind CSS, Node.js, and the OpenAI API.",
+      "Deliver features end to end across frontend, backend, content, and data, working with Product, Design, Editorial, and Engineering.",
       "Automated recurring operational tasks in internal admin tools, enabling editorial self-service. Saved approximately 2 hours of development and 2 hours of Product validation.",
       "Develop and maintain services and internal tools with React, Fastify, PostgreSQL, and Contentful in a Docker and Kubernetes environment.",
       "Contribute to code reviews and technical decisions across the team.",
