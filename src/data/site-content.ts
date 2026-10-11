@@ -55,7 +55,7 @@ export const siteContent: Record<Locale, SiteContent> = {
   en: {
     lang: "en",
     localeName: "English",
-    title: "Eric Marès — Software Engineer",
+    title: `${profile.name} — ${profile.role}`,
     description:
       "Eric Marès — Software Engineer in Córdoba, Spain. Full-stack development and applied AI with TypeScript, React, Next.js, and Node.js. Experience at The Knot Worldwide, ALTEN, and Wheel Hub.",
     location: profile.location,
@@ -117,7 +117,7 @@ export const siteContent: Record<Locale, SiteContent> = {
   es: {
     lang: "es",
     localeName: "Español",
-    title: "Eric Marès — Ingeniero de software",
+    title: "Eric Marès — Ingeniero de software · Full Stack e IA aplicada",
     description:
       "Eric Marès — Ingeniero de software en Córdoba, España. Desarrollo full stack e IA aplicada con TypeScript, React, Next.js y Node.js. Experiencia en The Knot Worldwide, ALTEN y Wheel Hub.",
     location: "Córdoba, España",

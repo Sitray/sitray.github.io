@@ -27,10 +27,10 @@ test("build contains complete semantic content without client-side JavaScript", 
 });
 
 test("both localized pages publish complete, bidirectional language navigation", () => {
-  assert.match(english, /<title>Eric Marès — Software Engineer<\/title>/);
+  assert.match(english, /<title>Eric Marès — Software Engineer · Full Stack &amp; Applied AI<\/title>/);
   assert.match(
     spanish,
-    /<title>Eric Marès — Ingeniero de software<\/title>/,
+    /<title>Eric Marès — Ingeniero de software · Full Stack e IA aplicada<\/title>/,
   );
   assert.match(
     english,

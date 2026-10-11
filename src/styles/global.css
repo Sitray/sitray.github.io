@@ -258,8 +258,9 @@ h1 {
   color: inherit;
 }
 .text-link {
-  display: inline-block;
-  padding: 12px 0;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
 }
 .text-link > span {
   margin-left: 10px;
@@ -313,6 +314,9 @@ h2 {
   margin-top: 16px;
   color: var(--muted);
   font-size: 14px;
+}
+.job:first-child .job-description {
+  color: var(--text);
 }
 .accomplishments {
   padding-left: 18px;
@@ -394,7 +398,9 @@ h2 {
   margin-top: 25px;
 }
 .email {
-  display: inline-block;
+  display: inline-flex;
+  align-items: flex-end;
+  min-height: 44px;
   font-size: clamp(17px, 2vw, 23px);
   padding-bottom: 7px;
   border-bottom: 1px solid var(--line);
@@ -429,7 +435,9 @@ footer {
   font-size: 12px;
 }
 footer a {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
 }
 footer a > span {
   color: var(--accent);
