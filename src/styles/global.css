@@ -6,7 +6,7 @@
   --accent: #c4ad79;
   --line: #393d38;
   --text-soft: #c3c6bd;
-  --header-height: 90px;
+  --header-height: 72px;
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
   --duration-fast: 200ms;
   --z-grain: 1;
@@ -28,6 +28,8 @@ html {
 }
 body {
   margin: 0;
+  /* The header backdrop bleeds to 100vw; clip keeps the scrollbar width from causing horizontal scroll without breaking sticky. */
+  overflow-x: clip;
 }
 body::before {
   content: "";
@@ -107,6 +109,14 @@ li {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  isolation: isolate;
+}
+/* Full-bleed bar: content stays on the column, the backdrop and hairline span the viewport. */
+.site-header::before {
+  content: "";
+  position: absolute;
+  inset: 0 calc(50% - 50vw);
+  z-index: -1;
   border-bottom: 1px solid var(--line);
   background: color-mix(in srgb, var(--bg) 84%, transparent);
   -webkit-backdrop-filter: blur(12px);
@@ -118,7 +128,7 @@ li {
   gap: 30px;
 }
 .wordmark {
-  font-size: 34px;
+  font-size: 30px;
   font-weight: 600;
   letter-spacing: -3px;
   transition: opacity var(--duration-fast) var(--ease-out);
@@ -187,11 +197,17 @@ nav a:hover,
 footer a:hover {
   color: var(--accent);
 }
+/* First viewport: content anchored to the bottom, capped so tall screens don't float it.
+   64px short of the fold so the next section's hairline peeks in as a scroll cue. */
 .hero {
-  padding: 64px 0 54px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-height: min(calc(100svh - var(--header-height) - 64px), 820px);
+  padding: 48px 0 clamp(56px, 9vh, 104px);
 }
 h1 {
-  margin: 0 0 17px -4px;
+  margin: 0 0 20px -4px;
   font-size: clamp(52px, 6.8vw, 88px);
   line-height: 1.05;
   font-weight: 500;
@@ -204,7 +220,7 @@ h1 {
   letter-spacing: -0.4px;
 }
 .hero-meta {
-  margin-top: 10px;
+  margin-top: 8px;
   color: var(--muted);
   font-size: 14px;
   line-height: 1.5;
@@ -213,7 +229,7 @@ h1 {
 .hero-summary {
   /* ~70 characters per line in Geist; ch would allow ~90. */
   max-width: 35em;
-  margin-top: 18px;
+  margin-top: 32px;
   font-size: 17px;
   color: var(--text-soft);
 }
@@ -226,7 +242,7 @@ h1 {
   flex-wrap: wrap;
   align-items: center;
   gap: 16px 30px;
-  margin-top: 26px;
+  margin-top: 36px;
   font-size: 14px;
 }
 .button {
@@ -504,50 +520,40 @@ footer a > span {
     width: calc(100% - 40px);
   }
   :root {
-    /* Two 44px rows + 6px top/bottom padding + 1px border. */
-    --header-height: 101px;
+    /* One 44px row + 6px top/bottom padding. */
+    --header-height: 56px;
   }
   .site-header {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    grid-template-rows: 44px 44px;
-    grid-template-areas:
-      "wordmark language"
-      "primary primary";
-    align-items: center;
     padding: 6px 0;
   }
   .wordmark {
-    grid-area: wordmark;
     display: inline-flex;
     align-items: center;
     min-height: 44px;
-    font-size: 30px;
+    font-size: 26px;
   }
   .header-navigation {
-    display: contents;
+    gap: 12px;
   }
   nav {
     gap: 16px;
     font-size: 13px;
   }
-  .header-navigation nav:not(.language-nav) {
-    grid-area: primary;
-    justify-content: space-between;
-    border-top: 1px solid var(--line);
+  /* One-page site: on phones the section links give way to the CV action; scrolling covers the rest. */
+  .header-navigation nav:not(.language-nav) a:not(.nav-cv) {
+    display: none;
   }
   .header-navigation nav a {
     white-space: nowrap;
   }
   .language-nav {
-    grid-area: language;
-    justify-self: end;
-    gap: 4px;
-    padding-left: 0;
-    border-left: 0;
+    gap: 0;
+    padding-left: 8px;
   }
+  /* Phones: natural height; a full-height hero would leave a void above the name. */
   .hero {
-    padding: 44px 0 38px;
+    min-height: 0;
+    padding: 40px 0 48px;
   }
   h1 {
     margin: 0 0 16px;
@@ -680,6 +686,8 @@ footer a > span {
     display: none;
   }
   .hero {
+    display: block;
+    min-height: 0;
     padding: 0 0 24px;
   }
   h1 {
