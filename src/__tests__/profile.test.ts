@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { assetPath, experience, profile } from "../data/profile";
+import { formatMonth, siteContent } from "../data/site-content";
 
 describe("recruiter profile", () => {
   it("preserves the supplied identity and direct contact details", () => {
@@ -42,5 +43,17 @@ describe("recruiter profile", () => {
     ["/landing-page", "/landing-page/eric-mares-cv.pdf"],
   ])("resolves the CV under deployment base %s", (base, expected) => {
     expect(assetPath(base, profile.cvFilename)).toBe(expected);
+  });
+
+  it("keeps each locale aligned with the shared factual career record", () => {
+    for (const content of Object.values(siteContent)) {
+      expect(content.jobs).toHaveLength(experience.length);
+      expect(content.toolkitLabels).toHaveLength(4);
+      expect(content.jobs.map((job) => job.accomplishments.length)).toEqual(
+        experience.map((job) => job.accomplishments.length),
+      );
+    }
+    expect(formatMonth(experience[0].start, "en")).toBe("Jul 2024");
+    expect(formatMonth(experience[0].start, "es")).toBe("jul. de 2024");
   });
 });

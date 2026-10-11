@@ -1,6 +1,6 @@
 # Eric Marès — personal website
 
-A recruiter-focused, English-language website with detailed professional experience, technical skills, education, and a downloadable CV.
+A recruiter-focused bilingual website with detailed professional experience, technical skills, education, and a downloadable English CV. English is the default at `/`; Spanish is available at `/es/`.
 
 ## Develop
 
@@ -19,12 +19,13 @@ npm run test:build
 npm run preview
 ```
 
-`test:build` builds the static site and checks the generated HTML, navigation, contact links, and downloadable PDF. Browser checks are still needed for responsive layout, keyboard navigation, and printing. There is no separate lint or type-check command configured.
+`test:build` builds both static pages and checks localized HTML, language navigation, contact links, and the byte-identical downloadable PDF. Browser checks are still needed for responsive layout, keyboard navigation, and printing. There is no separate lint or type-check command configured.
 
 ## Content and structure
 
 - `src/data/profile.ts`: factual profile, employment accomplishments, and tools.
-- `src/pages/index.astro`: semantic page, metadata, navigation, and contact links.
+- `src/data/site-content.ts`: typed English and Spanish content that reuses shared factual profile records.
+- `src/pages/[...locale].astro`: semantic static template for `/` and `/es/`, metadata, language navigation, and contact links.
 - `src/styles/global.css`: responsive editorial design, focus states, reduced motion, and print styles.
 - `public/eric-mares-cv.pdf`: supplied CV, copied without modification.
 - `src/__tests__/profile.test.ts`: profile and deployment-base regression tests.
