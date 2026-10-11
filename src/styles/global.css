@@ -9,9 +9,8 @@
   --header-height: 90px;
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
   --duration-fast: 200ms;
-  --z-base: 0;
+  --z-grain: 1;
   --z-header: 10;
-  --z-grain: 20;
   --z-skip: 30;
   font-family:
     "Geist Variable", "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -75,9 +74,6 @@ li {
 .shell {
   width: min(1120px, calc(100% - 112px));
   margin: 0 auto;
-}
-.accent {
-  color: var(--accent);
 }
 .sr-only {
   position: absolute;
@@ -155,7 +151,6 @@ nav a span {
 .language-nav a {
   justify-content: center;
   min-width: 44px;
-  min-height: 44px;
   color: var(--muted);
   font-size: 13px;
   letter-spacing: 0.08em;
@@ -228,10 +223,11 @@ h1 {
 }
 .hero-actions {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 30px;
+  gap: 16px 30px;
   margin-top: 26px;
-  font-size: 13px;
+  font-size: 14px;
 }
 .button {
   display: inline-flex;
@@ -324,11 +320,8 @@ h2 {
 }
 .job-description {
   margin-top: 16px;
-  color: var(--muted);
+  color: var(--text-soft);
   font-size: 14px;
-}
-.job:first-child .job-description {
-  color: var(--text);
 }
 .accomplishments {
   padding-left: 18px;
@@ -415,7 +408,7 @@ h2 {
   flex-wrap: wrap;
   align-items: center;
   gap: 16px 32px;
-  font-size: 13px;
+  font-size: 14px;
 }
 .email {
   display: inline-flex;
@@ -463,17 +456,6 @@ footer a > span {
   color: var(--accent);
   margin-left: 8px;
 }
-/* Used only by the 404 page; the home hero carries no eyebrow. */
-.eyebrow {
-  color: var(--muted);
-  font-size: 12px;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 1.6px;
-}
-.eyebrow + h1 {
-  margin-top: 18px;
-}
 .not-found h1 {
   font-size: clamp(40px, 5.6vw, 68px);
 }
@@ -501,6 +483,9 @@ footer a > span {
 }
 .hero > :nth-child(5) {
   animation-delay: 280ms;
+}
+.hero > :nth-child(6) {
+  animation-delay: 350ms;
 }
 @media (max-width: 900px) {
   .shell {
@@ -530,7 +515,6 @@ footer a > span {
       "wordmark language"
       "primary primary";
     align-items: center;
-    min-height: var(--header-height);
     padding: 6px 0;
   }
   .wordmark {
@@ -582,9 +566,8 @@ footer a > span {
     font-size: 16px;
   }
   .hero-actions {
-    gap: 24px;
+    gap: 16px 24px;
     margin-top: 23px;
-    font-size: 12px;
   }
   .button {
     padding: 14px 18px;
@@ -656,16 +639,12 @@ footer a > span {
     align-items: flex-start;
     gap: 13px;
     margin-top: 21px;
-    font-size: 12px;
   }
   .language-nav a {
     font-size: 12px;
   }
   .social-links {
     font-size: 13px;
-  }
-  footer {
-    font-size: 12px;
   }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -725,11 +704,17 @@ footer a > span {
     color: var(--text);
     font-size: 12px;
   }
-  .background-grid {
-    gap: 40px;
-  }
   .education,
   .languages {
     break-inside: avoid;
+  }
+  .hero > * {
+    animation: none;
+  }
+  .social-links span {
+    display: none;
+  }
+  .social-links a::after {
+    content: " (" attr(href) ")";
   }
 }

@@ -41,7 +41,8 @@ describe("recruiter profile", () => {
     );
     expect(bullets).toContain("ABB Edge Config Tool");
     expect(bullets).toContain("PortAventura");
-    expect(bullets).not.toMatch(/millions|per week|per month|per task|\d+%/);
+    expect(experience[0].accomplishments[1]).toContain("per task");
+    expect(bullets).not.toMatch(/millions|per week|per month|\d+%/);
     expect(experience.map((job) => job.accomplishments.length)).toEqual([
       5, 4, 2,
     ]);
@@ -63,6 +64,26 @@ describe("recruiter profile", () => {
       expect(content.heroSummary).toMatch(/The Bump/);
     }
     expect(siteContent.es.heroSummary).not.toMatch(/con IA con/);
+  });
+
+  it("uses no em dashes in copy and spaced en dashes in date ranges", () => {
+    const copy = JSON.stringify({ experience, siteContent, profile });
+    expect(copy).not.toMatch(/\u2014/);
+    for (const job of experience) expect(job.period).toMatch(/ – /);
+    expect(siteContent.en.title).toBe(
+      "Eric Marès · Software Engineer · Full Stack & Applied AI",
+    );
+  });
+
+  it("orders the current role from shipped past work to present duties", () => {
+    for (const content of Object.values(siteContent)) {
+      const [ai, automated, deliver] = content.jobs[0].accomplishments;
+      expect(ai).toMatch(/OpenAI/);
+      expect(automated).toMatch(/^Automat/);
+      expect(deliver).toMatch(/^(Deliver|Desarrollo funcionalidades)/);
+    }
+    expect(siteContent.es.sections.skills).toBe("Tecnologías");
+    expect(siteContent.es.languages[0].proficiency).toBe("Lengua materna");
   });
 
   it("keeps each locale aligned with the shared factual career record", () => {

@@ -27,10 +27,10 @@ test("build contains complete semantic content without client-side JavaScript", 
 });
 
 test("both localized pages publish complete, bidirectional language navigation", () => {
-  assert.match(english, /<title>Eric Marès — Software Engineer · Full Stack &amp; Applied AI<\/title>/);
+  assert.match(english, /<title>Eric Marès · Software Engineer · Full Stack &amp; Applied AI<\/title>/);
   assert.match(
     spanish,
-    /<title>Eric Marès — Ingeniero de software · Full Stack e IA aplicada<\/title>/,
+    /<title>Eric Marès · Ingeniero de software · Full Stack e IA aplicada<\/title>/,
   );
   assert.match(
     english,
@@ -50,6 +50,18 @@ test("both localized pages publish complete, bidirectional language navigation",
   );
   assert.match(english, /href="\/es\/" hreflang="es"/);
   assert.match(spanish, /href="\/" hreflang="en"/);
+  for (const { locale, html } of pages) {
+    assert.match(
+      html,
+      /<a[^>]*hreflang="en"[^>]*lang="en"[^>]*>\s*EN\s*<span class="sr-only">\s*English\s*<\/span>/,
+      `${locale} English link must name itself in English`,
+    );
+    assert.match(
+      html,
+      /<a[^>]*hreflang="es"[^>]*lang="es"[^>]*>\s*ES\s*<span class="sr-only">\s*Español\s*<\/span>/,
+      `${locale} Spanish link must name itself in Spanish`,
+    );
+  }
   assert.match(spanish, /Descargar CV en inglés/);
   assert.match(spanish, /Experiencia/);
   assert.match(spanish, /Actualidad/);
@@ -168,9 +180,34 @@ test("publishes a static, noindexed 404 page linking both locales", () => {
   assert.match(notFound, /<html lang="en">/);
   assert.equal((notFound.match(/<h1\b/g) || []).length, 1);
   assert.match(notFound, /<meta name="robots" content="noindex/);
+  assert.match(notFound, /<title>Page not found · Eric Marès<\/title>/);
+  assert.match(notFound, /<a class="skip-link" href="#main"/);
+  assert.match(notFound, /<main\b[^>]*id="main"[^>]*tabindex="-1"/);
+  assert.match(notFound, /<h1\b[^>]*>[^<]*<\/h1>\s*<p class="hero-meta">Error 404 · Página no encontrada<\/p>/);
+  assert.doesNotMatch(notFound, /class="eyebrow"/, "404 still has an eyebrow");
   assert.match(notFound, /href="\/"/);
   assert.match(notFound, /href="\/es\/"/);
+  assert.match(
+    notFound,
+    /<a\b[^>]*class="button"[^>]*href="\/eric-mares-cv\.pdf"[^>]*download/,
+    "404 is missing the CV download button",
+  );
+  assert.match(notFound, /<a\b[^>]*class="text-link"[^>]*href="mailto:ericmares13@gmail\.com"/);
+  assert.match(notFound, /<footer\b[\s\S]*href="#top"[\s\S]*<\/footer>/);
+  assert.doesNotMatch(notFound, /↗/, "404 internal links must not use the external arrow");
   assert.doesNotMatch(notFound, /<script\b/);
+});
+
+test("no page uses an em dash in copy or metadata", () => {
+  for (const [name, html] of [
+    ["dist/index.html", english],
+    ["dist/es/index.html", spanish],
+    ["dist/404.html", readPage("dist/404.html")],
+  ]) {
+    assert.doesNotMatch(html, /\u2014/, `${name} contains an em dash`);
+  }
+  assert.match(english, /Jul 2024\s*<\/time>\s*–\s*Present/);
+  assert.match(english, /React Native: The Practical Guide/);
 });
 
 test("hero shows a derived seniority line instead of a tracked-caps eyebrow", () => {
@@ -182,6 +219,16 @@ test("hero shows a derived seniority line instead of a tracked-caps eyebrow", ()
   }
   assert.match(english, /<strong class="proof">OpenAI API<\/strong>/);
   assert.match(spanish, /<strong class="proof">API de OpenAI<\/strong>/);
+});
+
+test("mailto text link uses the internal arrow", () => {
+  for (const { locale, html } of pages) {
+    assert.match(
+      html,
+      /<a class="text-link" href="mailto:[^"]+">[^<]*<span aria-hidden="true">→<\/span>/,
+      `${locale} hero mailto link must use →`,
+    );
+  }
 });
 
 test("contact section closes with a CV download", () => {

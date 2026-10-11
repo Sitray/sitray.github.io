@@ -84,12 +84,11 @@ const heroSummary = splitHighlights(content.heroSummary, content.heroHighlights)
               <a
                 href={language === "en" ? "/" : "/es/"}
                 hreflang={language}
+                lang={language}
                 aria-current={language === locale ? "page" : undefined}
               >
                 {language.toUpperCase()}
-                <span class="sr-only">
-                  {language === locale ? ` (${content.localeName})` : ""}
-                </span>
+                <span class="sr-only"> {siteContent[language].localeName}</span>
               </a>
             ))}
           </nav>
@@ -115,7 +114,7 @@ const heroSummary = splitHighlights(content.heroSummary, content.heroHighlights)
               <span class="sr-only"> ({content.cv.documentLanguage})</span>
             </a>
             <a class="text-link" href={`mailto:${profile.email}`}>
-              {content.contactCta} <span aria-hidden="true">↗</span>
+              {content.contactCta} <span aria-hidden="true">→</span>
             </a>
           </div>
         </section>
@@ -135,7 +134,7 @@ const heroSummary = splitHighlights(content.heroSummary, content.heroHighlights)
                       <time datetime={job.start}>
                         {formatMonth(job.start, locale)}
                       </time>{" "}
-                      —{" "}
+                      –{" "}
                       {job.end ? (
                         <time datetime={job.end}>
                           {formatMonth(job.end, locale)}
@@ -180,7 +179,7 @@ const heroSummary = splitHighlights(content.heroSummary, content.heroHighlights)
             <div class="education">
               <h3>{content.education.qualification}</h3>
               <p>
-                Escola Pia Mataró <span>2015 — 2017</span>
+                Escola Pia Mataró <span>2015 – 2017</span>
               </p>
               <p class="additional-learning">
                 {content.education.additionalLearning}

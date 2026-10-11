@@ -58,9 +58,9 @@ export const siteContent: Record<Locale, SiteContent> = {
   en: {
     lang: "en",
     localeName: "English",
-    title: `${profile.name} — ${profile.role}`,
+    title: `${profile.name} · ${profile.role}`,
     description:
-      "Eric Marès — Software Engineer in Córdoba, Spain. Full-stack development and applied AI with TypeScript, React, Next.js, and Node.js. Experience at The Knot Worldwide, ALTEN, and Wheel Hub.",
+      "Eric Marès, Software Engineer in Córdoba, Spain. Full-stack development and applied AI with TypeScript, React, Next.js, and Node.js. Experience at The Knot Worldwide, ALTEN, and Wheel Hub.",
     location: profile.location,
     role: profile.role,
     skipLink: "Skip to content",
@@ -78,7 +78,7 @@ export const siteContent: Record<Locale, SiteContent> = {
       documentLanguage: "PDF",
     },
     heroSummary:
-      "I build AI-powered product features that ship to production. At The Knot Worldwide, I built personalized baby-name matching with the OpenAI API for The Bump, a platform serving millions of monthly active users, on a full-stack foundation of TypeScript, React, Next.js, and Node.js.",
+      "I build AI-powered product features that ship to production. At The Knot Worldwide, I created personalized baby-name matching with the OpenAI API for The Bump, a platform serving millions of monthly active users. My foundation is full stack: TypeScript, React, Next.js, and Node.js.",
     heroHighlights: ["OpenAI API", "millions of monthly active users"],
     experienceYears: (years) => `${years}+ years of experience`,
     contactCta: "Contact me",
@@ -111,7 +111,7 @@ export const siteContent: Record<Locale, SiteContent> = {
     toolkitLabels: toolkit.map((group) => group.name),
     education: {
       qualification: "Multiplatform Application Development",
-      additionalLearning: "Additional learning: React Native — The Practical Guide",
+      additionalLearning: "Additional learning: React Native: The Practical Guide",
     },
     languages: [
       { name: "Catalan & Spanish", proficiency: "Native" },
@@ -122,9 +122,9 @@ export const siteContent: Record<Locale, SiteContent> = {
   es: {
     lang: "es",
     localeName: "Español",
-    title: "Eric Marès — Ingeniero de software · Full Stack e IA aplicada",
+    title: "Eric Marès · Ingeniero de software · Full Stack e IA aplicada",
     description:
-      "Eric Marès — Ingeniero de software en Córdoba, España. Desarrollo full stack e IA aplicada con TypeScript, React, Next.js y Node.js. Experiencia en The Knot Worldwide, ALTEN y Wheel Hub.",
+      "Eric Marès, Ingeniero de software en Córdoba, España. Desarrollo full stack e IA aplicada con TypeScript, React, Next.js y Node.js. Experiencia en The Knot Worldwide, ALTEN y Wheel Hub.",
     location: "Córdoba, España",
     role: "Ingeniero de software · Full Stack e IA aplicada",
     skipLink: "Ir al contenido",
@@ -142,7 +142,7 @@ export const siteContent: Record<Locale, SiteContent> = {
       documentLanguage: "PDF en inglés",
     },
     heroSummary:
-      "Construyo funcionalidades de producto con IA que llegan a producción. En The Knot Worldwide creé la búsqueda personalizada de nombres de bebé con la API de OpenAI para The Bump, una plataforma con millones de usuarios activos mensuales, sobre una base full stack de TypeScript, React, Next.js y Node.js.",
+      "Construyo funcionalidades de producto con IA que llegan a producción. En The Knot Worldwide creé el emparejamiento personalizado de nombres de bebé con la API de OpenAI para The Bump, una plataforma con millones de usuarios activos mensuales. Mi base es full stack: TypeScript, React, Next.js y Node.js.",
     heroHighlights: ["API de OpenAI", "millones de usuarios activos mensuales"],
     experienceYears: (years) => `Más de ${years} años de experiencia`,
     contactCta: "Contactar",
@@ -150,7 +150,7 @@ export const siteContent: Record<Locale, SiteContent> = {
     remote: "Totalmente remoto",
     sections: {
       experience: "Experiencia",
-      skills: "Habilidades",
+      skills: "Tecnologías",
       education: "Formación",
       languages: "Idiomas",
       contact: "Contacto",
@@ -159,11 +159,11 @@ export const siteContent: Record<Locale, SiteContent> = {
       {
         role: "Ingeniero de software",
         description:
-          "The Bump — una plataforma que presta servicio a millones de usuarios activos mensuales.",
+          "The Bump, una plataforma con millones de usuarios activos mensuales.",
         accomplishments: [
-          "Creé una funcionalidad de búsqueda de nombres de bebé con IA que compara las preferencias de las parejas, identifica coincidencias y ofrece sugerencias personalizadas con Next.js, TypeScript, Tailwind CSS, Node.js y la API de OpenAI.",
+          "Creé una funcionalidad de emparejamiento de nombres de bebé con IA que compara las preferencias de las parejas, identifica coincidencias y ofrece sugerencias personalizadas con Next.js, TypeScript, Tailwind CSS, Node.js y la API de OpenAI.",
+          "Automaticé tareas operativas recurrentes en herramientas internas de administración, permitiendo el autoservicio del equipo editorial y ahorrando aproximadamente 2 horas de desarrollo y 2 horas de validación de Producto por tarea.",
           "Desarrollo funcionalidades de principio a fin en frontend, backend, contenido y datos, colaborando con Producto, Diseño, Editorial e Ingeniería.",
-          "Automaticé tareas operativas recurrentes en herramientas internas de administración, permitiendo el autoservicio del equipo editorial. Se ahorraron aproximadamente 2 horas de desarrollo y 2 horas de validación de Producto.",
           "Desarrollo y mantengo servicios y herramientas internas con React, Fastify, PostgreSQL y Contentful en un entorno de Docker y Kubernetes.",
           "Participo en revisiones de código y decisiones técnicas del equipo.",
         ],
@@ -172,9 +172,9 @@ export const siteContent: Record<Locale, SiteContent> = {
         role: "Ingeniero de software júnior",
         description: "Proyectos para ABB Robotics y PortAventura.",
         accomplishments: [
-          "Desarrollé módulos para Optifact Suite de ABB, una solución de automatización industrial y aplicaciones de automoción, incluido trabajo en ABB Insights y ABB Edge Config Tool.",
-          "Creé funcionalidades industriales de IoT y telemetría edge con Node.js, React, TypeScript y GraphQL.",
-          "Automaticé flujos de despliegue con Docker, Ansible y GitHub Actions en canalizaciones de Azure IoT Edge.",
+          "Desarrollé módulos para Optifact Suite de ABB (automatización industrial y aplicaciones de automoción), incluido trabajo en ABB Insights y ABB Edge Config Tool.",
+          "Creé funcionalidades industriales de IoT y telemetría en el edge con Node.js, React, TypeScript y GraphQL.",
+          "Automaticé flujos de despliegue con Docker, Ansible y GitHub Actions en pipelines de Azure IoT Edge.",
           "Desarrollé nuevas pantallas en React para PortAventura.",
         ],
       },
@@ -190,10 +190,10 @@ export const siteContent: Record<Locale, SiteContent> = {
     toolkitLabels: ["IA y contenido", "Frontend", "Backend y datos", "Infraestructura"],
     education: {
       qualification: "Desarrollo de Aplicaciones Multiplataforma",
-      additionalLearning: "Formación adicional: React Native — The Practical Guide",
+      additionalLearning: "Formación adicional: React Native: The Practical Guide",
     },
     languages: [
-      { name: "Catalán y español", proficiency: "Nativo" },
+      { name: "Catalán y español", proficiency: "Lengua materna" },
       { name: "Inglés", proficiency: "Competencia profesional" },
     ],
     footerBackToTop: "Volver al inicio",

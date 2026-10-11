@@ -1,6 +1,6 @@
-# Eric Marès — personal website
+# Eric Marès: personal website
 
-A recruiter-focused bilingual website with detailed professional experience, technical skills, education, and a downloadable English CV. English is the default at `/`; Spanish is available at `/es/`.
+A recruiter-focused bilingual website with detailed professional experience, technical skills, education, and a downloadable English CV. English is the default at `/`; Spanish is available at `/es/`. The hero shows a seniority line derived from the earliest CV start date and highlights the Applied AI proof phrases inside the summary. Content constraints (positioning, evidence on hand, what must not be invented) live in [PRODUCT.md](PRODUCT.md).
 
 ## Develop
 
@@ -19,18 +19,21 @@ npm run test:build
 npm run preview
 ```
 
-`test:build` builds both static pages and checks localized HTML, language navigation, contact links, and the byte-identical downloadable PDF. Browser checks are still needed for responsive layout, keyboard navigation, and printing. There is no separate lint or type-check command configured.
+`npm test` runs the vitest unit tests over the typed content: identity and contact details, employment order, CV accomplishments without invented metrics, locale parity, derived years of experience, hero highlight phrases, the em dash ban, and the deployment-base asset helper.
+
+`test:build` builds the site and checks the generated HTML: localized pages without client JavaScript, titles and metadata, bidirectional language navigation with self-named links, fragment anchors, the byte-identical downloadable PDF, contact links, canonical and hreflang URLs, the derived seniority line and proof highlighting, the em dash ban, and the 404 page (noindex, skip link, CV download, email and footer). Browser checks are still needed for responsive layout, keyboard navigation, and printing. There is no separate lint or type-check command configured.
 
 ## Content and structure
 
 - `src/data/profile.ts`: factual profile, employment accomplishments, and tools.
 - `src/data/site-content.ts`: typed English and Spanish content that reuses shared factual profile records.
 - `src/pages/[...locale].astro`: semantic static template for `/` and `/es/`, metadata, language navigation, and contact links.
-- `src/pages/404.astro`: static, noindexed not-found page with links to both locales.
+- `src/pages/404.astro`: static, noindexed not-found page with links to both locales, the CV download, email and footer.
 - `src/styles/global.css`: responsive editorial design, focus states, reduced motion, and print styles.
 - `public/eric-mares-cv.pdf`: supplied CV, copied without modification.
-- `src/__tests__/profile.test.ts`: profile and deployment-base regression tests.
-- `tests/build.test.mjs`: generated-site smoke tests.
+- `src/__tests__/profile.test.ts`: content, locale parity, and deployment-base regression tests.
+- `tests/build.test.mjs`: generated-site smoke tests over `dist/`.
+- `PRODUCT.md`: product brief and content constraints every change must respect.
 
 Astro 7 renders the complete page as static HTML. No React, WebGL, client-side JavaScript, third-party font CDN, analytics, or contact service is needed. The Geist variable font is self-hosted from `@fontsource-variable/geist` and bundled into `dist/_astro/`. Contact links open the visitor’s email application or the relevant public profile.
 
