@@ -128,6 +128,10 @@ li {
   gap: 30px;
 }
 .wordmark {
+  display: inline-flex;
+  align-items: center;
+  min-width: 44px;
+  min-height: 44px;
   font-size: 30px;
   font-weight: 600;
   letter-spacing: -3px;
@@ -173,6 +177,8 @@ nav a span {
   text-underline-offset: 5px;
 }
 .nav-cv {
+  justify-content: center;
+  min-width: 44px;
   color: var(--accent);
 }
 nav a,
@@ -198,13 +204,18 @@ footer a:hover {
   color: var(--accent);
 }
 /* First viewport: content anchored to the bottom, capped so tall screens don't float it.
-   64px short of the fold so the next section's hairline peeks in as a scroll cue. */
+   64px short of the fold so the next section's hairline peeks in as a scroll cue.
+   The 60vw cap releases the anchoring on portrait screens, where it left a void above the name. */
 .hero {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  min-height: min(calc(100svh - var(--header-height) - 64px), 820px);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 340px);
+  column-gap: 72px;
+  align-content: end;
+  min-height: min(calc(100svh - var(--header-height) - 64px), 820px, 60vw);
   padding: 48px 0 clamp(56px, 9vh, 104px);
+}
+.hero > * {
+  grid-column: 1;
 }
 h1 {
   margin: 0 0 20px -4px;
@@ -225,6 +236,35 @@ h1 {
   font-size: 14px;
   line-height: 1.5;
   font-variant-numeric: tabular-nums;
+}
+/* The facts a recruiter screens on, set as a spec list beside the pitch. */
+.hero-facts {
+  grid-column: 2;
+  grid-row: 1 / span 4;
+  align-self: end;
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+  font-variant-numeric: tabular-nums;
+}
+.hero-facts > div {
+  display: grid;
+  grid-template-columns: 104px 1fr;
+  gap: 16px;
+  padding: 13px 0;
+  border-top: 1px solid var(--line);
+}
+.hero-facts > div:last-child {
+  padding-bottom: 0;
+}
+.hero-facts dt {
+  color: var(--muted);
+}
+.hero-facts dd {
+  margin: 0;
+}
+.fact-long {
+  display: none;
 }
 .hero-summary {
   /* ~70 characters per line in Geist; ch would allow ~90. */
@@ -305,18 +345,16 @@ h2 {
   padding: 31px 0 35px;
   border-top: 1px solid var(--line);
 }
+.job:first-child {
+  padding-top: 0;
+  border-top: 0;
+}
 .job:last-child {
   padding-bottom: 0;
 }
 .job-date p {
   font-size: 14px;
   font-variant-numeric: tabular-nums;
-}
-.job-date > span {
-  display: block;
-  margin-top: 7px;
-  font-size: 13px;
-  color: var(--muted);
 }
 .job h3 {
   font-size: 25px;
@@ -334,9 +372,16 @@ h2 {
   /* ~75 characters per line at the body size. */
   max-width: 39em;
 }
+/* One accomplishment per job carries the weight; the list under it supports. */
+.job-lead {
+  max-width: 34em;
+  margin-top: 14px;
+  font-size: 17px;
+  line-height: 1.6;
+}
 .job-description {
   margin-top: 16px;
-  color: var(--text-soft);
+  color: var(--muted);
   font-size: 14px;
 }
 .accomplishments {
@@ -459,6 +504,7 @@ footer {
   padding: 24px 0 30px;
   display: flex;
   justify-content: space-between;
+  align-items: center;
   gap: 20px;
   color: var(--muted);
   font-size: 12px;
@@ -507,6 +553,46 @@ footer a > span {
   .shell {
     width: calc(100% - 64px);
   }
+  /* No room for a second column: the facts become one muted line under the role. */
+  .hero {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .hero-facts {
+    grid-column: 1;
+    grid-row: auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 8px;
+    margin-top: 8px;
+    color: var(--muted);
+  }
+  .hero-facts > div {
+    display: flex;
+    gap: 8px;
+    padding: 0;
+    border-top: 0;
+  }
+  .hero-facts > div:not(:last-child)::after {
+    content: "·";
+  }
+  /* The summary names the current employer one line below. */
+  .hero-facts .fact-current {
+    display: none;
+  }
+  .hero-facts dt {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  .fact-long {
+    display: inline;
+  }
+  .fact-short {
+    display: none;
+  }
   .job {
     grid-template-columns: 180px 1fr;
     gap: 25px;
@@ -527,9 +613,6 @@ footer a > span {
     padding: 6px 0;
   }
   .wordmark {
-    display: inline-flex;
-    align-items: center;
-    min-height: 44px;
     font-size: 26px;
   }
   .header-navigation {
@@ -563,8 +646,8 @@ footer a > span {
     font-size: 17px;
     max-width: 320px;
   }
-  .hero-meta {
-    margin-top: 8px;
+  .hero-meta,
+  .hero-facts {
     font-size: 13px;
   }
   .hero-summary {
@@ -593,18 +676,11 @@ footer a > span {
     gap: 17px;
     padding: 24px 0 29px;
   }
-  .job-date {
-    display: flex;
-    justify-content: space-between;
-    gap: 12px;
-    align-items: baseline;
+  .job:first-child {
+    padding-top: 0;
   }
   .job-date p {
     font-size: 13px;
-  }
-  .job-date > span {
-    margin-top: 0;
-    font-size: 12px;
   }
   .job h3 {
     font-size: 23px;
@@ -614,10 +690,12 @@ footer a > span {
   }
   .job-description {
     margin-top: 14px;
-    font-size: 13px;
+  }
+  .job-lead {
+    margin-top: 12px;
+    font-size: 16px;
   }
   .accomplishments {
-    font-size: 13px;
     padding-left: 16px;
     margin-top: 13px;
   }
@@ -690,7 +768,19 @@ footer a > span {
     min-height: 0;
     padding: 0 0 24px;
   }
+  .hero-facts {
+    margin: 12px 0 16px;
+    max-width: 420px;
+    font-size: 12px;
+  }
+  .hero-facts > div {
+    padding: 5px 0;
+  }
+  .job-lead {
+    font-size: 13px;
+  }
   h1 {
+    margin-left: 0;
     font-size: 40px;
   }
   .hero-summary {
@@ -723,6 +813,8 @@ footer a > span {
     display: none;
   }
   .social-links a::after {
-    content: " (" attr(href) ")";
+    /* inline-flex drops a leading space in generated content. */
+    margin-left: 0.35em;
+    content: "(" attr(href) ")";
   }
 }

@@ -32,9 +32,8 @@ const canonicalUrl = absoluteUrl(localePath);
 const ogLocales = { en: "en_US", es: "es_ES" } as const;
 const ogLocale = ogLocales[locale];
 const ogLocaleAlternate = ogLocales[locale === "en" ? "es" : "en"];
-const heroMeta = `${content.location} · ${content.experienceYears(
-  yearsOfExperience(experience),
-)}`;
+const years = yearsOfExperience(experience);
+const currentRole = `${content.jobs[0].role}, ${experience[0].company}`;
 const heroSummary = splitHighlights(content.heroSummary, content.heroHighlights);
 ---
 
@@ -98,7 +97,27 @@ const heroSummary = splitHighlights(content.heroSummary, content.heroHighlights)
         <section class="hero" aria-labelledby="hero-title">
           <h1 id="hero-title">{profile.name}</h1>
           <p class="hero-role">{content.role}</p>
-          <p class="hero-meta">{heroMeta}</p>
+          <dl class="hero-facts">
+            <div class="fact-current">
+              <dt>{content.factLabels.currentRole}</dt>
+              <dd>{currentRole}</dd>
+            </div>
+            <div>
+              <dt>{content.factLabels.location}</dt>
+              <dd>{content.location}</dd>
+            </div>
+            <div>
+              <dt>{content.factLabels.workMode}</dt>
+              <dd>{content.remote}</dd>
+            </div>
+            <div>
+              <dt>{content.factLabels.experience}</dt>
+              <dd>
+                <span class="fact-long">{content.experienceYears(years)}</span>
+                <span class="fact-short">{content.experienceYearsShort(years)}</span>
+              </dd>
+            </div>
+          </dl>
           <p class="hero-summary">
             {heroSummary.map((segment) =>
               segment.highlight ? (
@@ -113,7 +132,7 @@ const heroSummary = splitHighlights(content.heroSummary, content.heroHighlights)
               {content.cv.download} <span aria-hidden="true">↓</span>
               <span class="sr-only"> ({content.cv.documentLanguage})</span>
             </a>
-            <a class="text-link" href={`mailto:${profile.email}`}>
+            <a class="text-link" href="#contact">
               {content.contactCta} <span aria-hidden="true">→</span>
             </a>
           </div>
@@ -127,6 +146,7 @@ const heroSummary = splitHighlights(content.heroSummary, content.heroHighlights)
           <div class="timeline">
             {experience.map((job, index) => {
               const localizedJob = content.jobs[index];
+              const [lead, ...rest] = localizedJob.accomplishments;
               return (
                 <article class="job">
                   <div class="job-date">
@@ -143,14 +163,14 @@ const heroSummary = splitHighlights(content.heroSummary, content.heroHighlights)
                         content.present
                       )}
                     </p>
-                    <span>{content.remote}</span>
                   </div>
                   <div class="job-body">
                     <h3>{job.company}</h3>
                     <p class="job-role">{localizedJob.role}</p>
                     <p class="job-description">{localizedJob.description}</p>
+                    <p class="job-lead">{lead}</p>
                     <ul class="accomplishments">
-                      {localizedJob.accomplishments.map((item) => <li>{item}</li>)}
+                      {rest.map((item) => <li>{item}</li>)}
                     </ul>
                   </div>
                 </article>
