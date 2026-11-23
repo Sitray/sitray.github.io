@@ -34,6 +34,14 @@ type SiteContent = {
   /** Exact substrings of heroSummary rendered as emphasized proof. */
   heroHighlights: string[];
   experienceYears: (years: number) => string;
+  /** Used next to a visible "Experience" label, where the long form would repeat it. */
+  experienceYearsShort: (years: number) => string;
+  factLabels: {
+    currentRole: string;
+    location: string;
+    workMode: string;
+    experience: string;
+  };
   contactCta: string;
   present: string;
   remote: string;
@@ -81,6 +89,13 @@ export const siteContent: Record<Locale, SiteContent> = {
       "I build AI-powered product features that ship to production. At The Knot Worldwide, I created personalized baby-name matching with the OpenAI API for The Bump, a platform serving millions of monthly active users. My foundation is full stack: TypeScript, React, Next.js, and Node.js.",
     heroHighlights: ["OpenAI API", "millions of monthly active users"],
     experienceYears: (years) => `${years}+ years of experience`,
+    experienceYearsShort: (years) => `${years}+ years`,
+    factLabels: {
+      currentRole: "Current role",
+      location: "Location",
+      workMode: "Work mode",
+      experience: "Experience",
+    },
     contactCta: "Contact me",
     present: "Present",
     remote: "Fully remote",
@@ -145,6 +160,13 @@ export const siteContent: Record<Locale, SiteContent> = {
       "Construyo funcionalidades de producto con IA que llegan a producción. En The Knot Worldwide creé el emparejamiento personalizado de nombres de bebé con la API de OpenAI para The Bump, una plataforma con millones de usuarios activos mensuales. Mi base es full stack: TypeScript, React, Next.js y Node.js.",
     heroHighlights: ["API de OpenAI", "millones de usuarios activos mensuales"],
     experienceYears: (years) => `Más de ${years} años de experiencia`,
+    experienceYearsShort: (years) => `Más de ${years} años`,
+    factLabels: {
+      currentRole: "Puesto actual",
+      location: "Ubicación",
+      workMode: "Modalidad",
+      experience: "Experiencia",
+    },
     contactCta: "Contactar",
     present: "Actualidad",
     remote: "Totalmente remoto",

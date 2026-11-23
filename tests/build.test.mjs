@@ -210,25 +210,81 @@ test("no page uses an em dash in copy or metadata", () => {
   assert.match(english, /React Native: The Practical Guide/);
 });
 
-test("hero shows a derived seniority line instead of a tracked-caps eyebrow", () => {
-  assert.match(english, /Córdoba, Spain · 4\+ years of experience/);
-  assert.match(spanish, /Córdoba, España · Más de 4 años de experiencia/);
+test("hero states location, remote work and seniority as a fact list, not a tracked-caps eyebrow", () => {
+  const expected = [
+    {
+      html: english,
+      facts: [
+        ["Current role", "Software Engineer, The Knot Worldwide"],
+        ["Location", "Córdoba, Spain"],
+        ["Work mode", "Fully remote"],
+        ["Experience", "4+ years of experience"],
+      ],
+    },
+    {
+      html: spanish,
+      facts: [
+        ["Puesto actual", "Ingeniero de software, The Knot Worldwide"],
+        ["Ubicación", "Córdoba, España"],
+        ["Modalidad", "Totalmente remoto"],
+        ["Experiencia", "Más de 4 años de experiencia"],
+      ],
+    },
+  ];
+  for (const { html, facts } of expected) {
+    const hero = html.slice(html.indexOf('class="hero"'), html.indexOf('id="experience"'));
+    const list = hero.match(/<dl class="hero-facts">[\s\S]*?<\/dl>/)?.[0] ?? "";
+    assert.equal((list.match(/<dt\b/g) || []).length, facts.length);
+    for (const [label, value] of facts) {
+      assert.match(
+        list.replace(/\s+/g, " "),
+        new RegExp(`<dt[^>]*> ?${label} ?</dt> ?<dd[^>]*> ?(?:<span[^>]*>)? ?${value.replace("+", "\\+")}`),
+        `hero is missing the fact ${label}: ${value}`,
+      );
+    }
+  }
   for (const { locale, html } of pages) {
     assert.doesNotMatch(html, /class="eyebrow"/, `${locale} still has an eyebrow`);
+    assert.doesNotMatch(html, /class="hero-meta"/, `${locale} still has the old meta line`);
     assert.match(html, /<strong class="proof">/, `${locale} has no proof emphasis`);
   }
   assert.match(english, /<strong class="proof">OpenAI API<\/strong>/);
   assert.match(spanish, /<strong class="proof">API de OpenAI<\/strong>/);
 });
 
-test("mailto text link uses the internal arrow", () => {
+test("remote work is stated once, in the hero, not repeated per job", () => {
+  assert.equal((english.match(/Fully remote/g) || []).length, 1);
+  assert.equal((spanish.match(/Totalmente remoto/g) || []).length, 1);
+});
+
+test("hero contact link leads to the contact section, where the address is visible", () => {
   for (const { locale, html } of pages) {
+    const hero = html.slice(html.indexOf('class="hero"'), html.indexOf('id="experience"'));
     assert.match(
-      html,
-      /<a class="text-link" href="mailto:[^"]+">[^<]*<span aria-hidden="true">→<\/span>/,
-      `${locale} hero mailto link must use →`,
+      hero,
+      /<a class="text-link" href="#contact">[^<]*<span aria-hidden="true">→<\/span>/,
+      `${locale} hero contact link must point to #contact with →`,
+    );
+    assert.doesNotMatch(hero, /mailto:/, `${locale} hero still opens a mail client`);
+    const contact = html.slice(html.indexOf('id="contact"'));
+    assert.match(contact, /<a class="email" href="mailto:ericmares13@gmail\.com">ericmares13@gmail\.com<\/a>/);
+  }
+});
+
+test("each job leads with one accomplishment set apart from the rest", () => {
+  for (const { locale, html } of pages) {
+    assert.equal(
+      (html.match(/<p class="job-lead">/g) || []).length,
+      3,
+      `${locale} must have one lead accomplishment per job`,
     );
   }
+  assert.match(english, /<p class="job-lead">Built AI-powered baby-name matching[^<]*OpenAI API\.<\/p>/);
+  assert.match(spanish, /<p class="job-lead">Creé una funcionalidad de emparejamiento[^<]*API de OpenAI\.<\/p>/);
+  // The lead is not repeated in the list that follows it.
+  assert.equal((english.match(/Built AI-powered baby-name matching/g) || []).length, 1);
+  assert.equal((english.match(/<li\b/g) || []).length, 8);
+  assert.equal((spanish.match(/<li\b/g) || []).length, 8);
 });
 
 test("contact section closes with a CV download", () => {
